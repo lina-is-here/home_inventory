@@ -25,7 +25,7 @@ class Product(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return f"{self.name} - {self.category.name}"
+        return self.name
 
 
 class Location(models.Model):
@@ -53,7 +53,7 @@ class Item(models.Model):
 
     name = models.ForeignKey(Product, on_delete=models.PROTECT)
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
-    expire_date = models.DateField(null=True, blank=True)
+    expiry_date = models.DateField(null=True, blank=True)
     quantity = models.IntegerField(default=1)
     measurement = models.ForeignKey(Measurement, on_delete=models.PROTECT)
     date_added = models.DateTimeField(auto_now_add=True)
