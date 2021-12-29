@@ -7,11 +7,6 @@ from related_admin import RelatedFieldAdmin
 from .models import Item, Product, Category, Location, Measurement
 
 
-admin.site.register(Category)
-admin.site.register(Location)
-admin.site.register(Measurement)
-
-
 class ExpiryDateListFilter(admin.SimpleListFilter):
     """
     Custom filter for expiry date
@@ -62,6 +57,21 @@ class ExpiryDateListFilter(admin.SimpleListFilter):
             )
 
 
+@admin.register(Category)
+class CategoryAdmin(RelatedFieldAdmin):
+    search_fields = ("name",)
+
+
+@admin.register(Location)
+class LocationAdmin(RelatedFieldAdmin):
+    search_fields = ("name",)
+
+
+@admin.register(Measurement)
+class MeasurementAdmin(RelatedFieldAdmin):
+    search_fields = ("name",)
+
+
 @admin.register(Item)
 class ItemAdmin(RelatedFieldAdmin):
     list_display = (
@@ -74,8 +84,13 @@ class ItemAdmin(RelatedFieldAdmin):
     )
     list_filter = ("location", "quantity", "name__category", ExpiryDateListFilter)
 
+    autocomplete_fields = ("name", "location", "measurement")
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "category")
     list_filter = ("category",)
+
+    search_fields = ("name",)
+    autocomplete_fields = ("category",)

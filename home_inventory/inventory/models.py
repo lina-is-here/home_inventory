@@ -9,6 +9,9 @@ class Category(models.Model):
         max_length=200, unique=True, help_text="The product category"
     )
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
@@ -35,6 +38,9 @@ class Location(models.Model):
         max_length=200, unique=True, help_text="Location, e.g. Pantry"
     )
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
@@ -43,6 +49,9 @@ class Measurement(models.Model):
     """Model representing measurement of the item, e.g. Pieces"""
 
     name = models.CharField(max_length=100, unique=True, help_text="Measurement unit")
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -61,6 +70,12 @@ class Item(models.Model):
 
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "location", "expiry_date"],
+                name="unique product - location - expiry date"
+            )
+        ]
 
     def get_absolute_url(self):
         """Returns the URL to access a particular item"""
