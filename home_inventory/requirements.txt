@@ -1,3 +1,4 @@
 django==4.0
 django-related-admin==1.0.1
-black==21.12b0
+uwsgi==2.0.20
+psycopg2==2.9.2
