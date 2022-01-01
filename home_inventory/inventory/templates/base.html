@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <!-- Meta tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TODO: Favicon -->
+
+  <!-- Bootstrap CSS -->
+  <link href="{% static 'inventory/css/bootstrap.css' %}" rel="stylesheet" type="text/css" >
+  <script src="{% static 'inventory/js/bootstrap.bundle.js' %}"></script>
+
+  {% block title %}<title>Home Inventory</title>{% endblock %}
+  </head>
+
+  <body>
+
+    {% include "header.html" %}
+
+    {% block content %}{% endblock %}
+
+  {% include "footer.html" %}
+
+  </body>
+
+</html>

@@ -73,7 +73,7 @@ class Item(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["name", "location", "expiry_date"],
-                name="unique product - location - expiry date"
+                name="unique product - location - expiry date",
             )
         ]
 
