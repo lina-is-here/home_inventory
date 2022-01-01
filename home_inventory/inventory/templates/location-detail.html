@@ -20,9 +20,9 @@
                 <div class="pb-3 fw-bold">{{ row.category}}</div>
                 {% for item in row.items %}
                 <div class="row">
-                    <div class="col-md-4 themed-grid-col">{{ item.name }}</div>
-                    <div class="col-md-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
-                    <div class="col-md-4 themed-grid-col">{{ item.expiry_date }}</div>
+                    <div class="col-4 themed-grid-col">{{ item.name }}</div>
+                    <div class="col-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
+                    <div class="col-4 themed-grid-col">{{ item.expiry_date }}</div>
                 </div>
                 {% endfor %}
             </div>
