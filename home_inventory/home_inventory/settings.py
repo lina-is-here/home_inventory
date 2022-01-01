@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "related_admin",
+    "django_filters",
     "inventory.apps.InventoryConfig",
 ]
 
