@@ -13,20 +13,20 @@
     </div>
     <div class="container">
         {% if rows %}
-        <div class="row mb-3 category-row">
+        <div class="row mb-3">
           <div class="col-sm-4 themed-grid-col fw-bold">Location</div>
           <div class="col-sm-4 themed-grid-col fw-bold">Items</div>
           <div class="col-sm-4 themed-grid-col fw-bold">Expired Items</div>
         </div>
         {% for row in rows %}
-        <div class="row mb-3 category-row">
-          <div class="col-sm-4 themed-grid-col">{{ row.location }}</div>
+        <div class="row mb-3">
+          <div class="col-sm-4 themed-grid-col"><a href="{{ row.location.get_absolute_url }}">{{ row.location.name }}</a></div>
           <div class="col-sm-4 themed-grid-col">{{ row.items_count }}</div>
           <div class="col-sm-4 themed-grid-col">{{ row.items_expired }}</div>
         </div>
         {% endfor %}
         {% else %}
-        <p>No categories yet :/</p>
+        <p>No locations yet :/</p>
         {% endif %}
         </div>
     </div>

@@ -41,6 +41,10 @@ class Location(models.Model):
     class Meta:
         ordering = ["name"]
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular location"""
+        return reverse("location-detail", args=[str(self.id)])
+
     def __str__(self):
         return self.name
 
