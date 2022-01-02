@@ -11,7 +11,13 @@
             </div>
         </div>
     </div>
+    <div class="btn-group" role="group" aria-label="Edit and Delete buttons">
     <a href="{% url 'edit-item' item_id=item.id %}" class="btn btn-secondary">Edit</a>
+    <form action="{% url 'delete-item' item_id=item.id %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+    </div>
     <div class="container">
         <div class="row mb-3">
             <div class="themed-grid-col">

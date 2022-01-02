@@ -81,3 +81,15 @@ def edit_item(request, item_id):
     else:
         form = ItemForm(instance=item)
     return render(request, "edit_item.html", context={"form": form, "item_id": item_id})
+
+
+def delete_item(request, item_id):
+    if request.method == "POST":
+        item = Item.objects.get(id=item_id)
+        location_id = item.location.id
+        item.delete()
+        return render(
+            request,
+            "location-detail.html",
+            context=get_location_context(location_id),
+        )
