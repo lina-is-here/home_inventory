@@ -1,37 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}<title>{{ location.name|title }}</title>{% endblock %}
+{% block title %}<title>{{ item.name|title }}</title>{% endblock %}
 
 {% block content %}
 <main class="container">
     <div class="container">
         <div class="p-4 p-md-5 mb-4 text-black rounded bg-white">
             <div class="col-md-12 px-0">
-                <h1 class="display-5">{{ location.name|title }}</h1>
+                <h1 class="display-5">{{ item.name|title }}</h1>
             </div>
         </div>
     </div>
-    <a href="{% url 'add-item' location_id=location_id %}" class="btn btn-secondary">Add</a>
-    {% if rows %}
-    {% for row in rows %}
+    <a href="{% url 'edit-item' item_id=item.id %}" class="btn btn-secondary">Edit</a>
     <div class="container">
         <div class="row mb-3">
             <div class="themed-grid-col">
-                <div class="pb-3 fw-bold">{{ row.category}}</div>
-                {% for item in row.items %}
                 <div class="row">
-                    <div class="col-4 themed-grid-col"><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></div>
+                    <div class="col-4 themed-grid-col">{{ item.location }}</div>
                     <div class="col-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
                     <div class="col-4 themed-grid-col">{{ item.expiry_date }}</div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
-    {% endfor %}
-    {% else %}
-    <p>No categories yet :/</p>
-    {% endif %}
     </div>
     </div>
 </main>

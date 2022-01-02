@@ -5,11 +5,10 @@ from .models import Item
 class ItemForm(ModelForm):
     class Meta:
         model = Item
-        exclude = ("location",)
-
+        fields = "__all__"
         widgets = {
             "expiry_date": DateInput(
-                format=("%d-%m-%Y"),
+                format="%Y-%m-%d",
                 attrs={
                     "class": "form-control",
                     "placeholder": "Select a date",
