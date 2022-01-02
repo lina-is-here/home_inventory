@@ -6,6 +6,8 @@ services:
       context: ./home_inventory
     env_file:
       ./home_inventory/.env
+    volumes:
+      - ./home_inventory/home_inventory/static:/static
     restart: "on-failure"
     ports:
       - 8000:8000
@@ -30,7 +32,7 @@ services:
       context: ./nginx
     restart: always
     volumes:
-      - ./home_inventory/static:/usr/share/nginx/static
+      - ./home_inventory/home_inventory/static:/usr/share/nginx/static
     ports:
       - 8080:80
     networks:
