@@ -1,9 +1,23 @@
 import datetime
 
+from dal import autocomplete
 from django.shortcuts import render
 
-from .models import Item, Location, Category
+from .models import Item, Location, Category, Product
 from .forms import ItemForm
+
+
+class ProductAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Product.objects.none()
+
+        qs = Product.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
 
 
 def get_location_context(location_id):
