@@ -1,6 +1,8 @@
 import datetime
+import json
 
 from dal import autocomplete
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import Item, Location, Category, Product
@@ -18,6 +20,27 @@ class ProductAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
 
         return qs
+
+
+class CategoryAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Category.objects.none()
+
+        qs = Category.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+
+def get_product_category(request, product_name):
+    product = Product.objects.get(name__icontains=product_name)
+
+    return HttpResponse(
+        json.dumps({"id": product.category.id, "name": product.category.name})
+    )
 
 
 def get_location_context(location_id):
@@ -77,7 +100,9 @@ def add_item(request, location_id):
     else:
         form = ItemForm(initial={"location": default_location})
     return render(
-        request, "add_item.html", context={"form": form, "location_id": location_id}
+        request,
+        "edit_item.html",
+        context={"form": form, "location_id": location_id, "action": "add"},
     )
 
 
@@ -94,7 +119,11 @@ def edit_item(request, item_id):
             )
     else:
         form = ItemForm(instance=item)
-    return render(request, "edit_item.html", context={"form": form, "item_id": item_id})
+    return render(
+        request,
+        "edit_item.html",
+        context={"form": form, "item_id": item_id, "action": "edit"},
+    )
 
 
 def delete_item(request, item_id):

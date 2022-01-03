@@ -22,7 +22,7 @@ class Product(models.Model):
     name = models.CharField(
         max_length=200, unique=True, help_text="Name of the product"
     )
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ["name"]

@@ -5,8 +5,18 @@ urlpatterns = [
     path("", views.index, name="index"),
     re_path(
         r"^product-autocomplete/$",
-        views.ProductAutoComplete.as_view(),
+        views.ProductAutoComplete.as_view(create_field="name"),
         name="product-autocomplete",
+    ),
+    re_path(
+        r"^category-autocomplete/$",
+        views.CategoryAutoComplete.as_view(create_field="name"),
+        name="category-autocomplete",
+    ),
+    path(
+        "product/<str:product_name>/",
+        views.get_product_category,
+        name="get-product-category",
     ),
     path("locations/<int:location_id>/", views.location_detail, name="location-detail"),
     path("locations/<int:location_id>/add/", views.add_item, name="add-item"),
