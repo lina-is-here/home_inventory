@@ -19,7 +19,7 @@
             <div class="themed-grid-col">
                 <div class="pb-3 fw-bold">{{ row.category}}</div>
                 {% for item in row.items %}
-                <div class="row">
+                <div class="row border">
                     <div class="col-4 themed-grid-col"><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></div>
                     <div class="col-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
                     <div class="col-4 themed-grid-col {% if item.is_expired %}bg-danger{% endif %}">{{ item.expiry_date }}</div>
