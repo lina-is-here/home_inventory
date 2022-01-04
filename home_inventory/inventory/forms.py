@@ -23,7 +23,7 @@ class ItemForm(ModelForm):
         fields = "__all__"
         widgets = {
             "name": autocomplete.ModelSelect2(
-                url="product-autocomplete", forward=("category",)
+                url="product-autocomplete"
             ),
             "expiry_date": DateInput(
                 format="%Y-%m-%d",

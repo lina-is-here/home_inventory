@@ -10,10 +10,10 @@ from .forms import ItemForm, LocationForm
 
 
 class ProductAutoComplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Product.objects.none()
+    def has_add_permission(self, request):
+        return True
 
+    def get_queryset(self):
         qs = Product.objects.all()
 
         if self.q:
@@ -23,10 +23,10 @@ class ProductAutoComplete(autocomplete.Select2QuerySetView):
 
 
 class CategoryAutoComplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Category.objects.none()
+    def has_add_permission(self, request):
+        return True
 
+    def get_queryset(self):
         qs = Category.objects.all()
 
         if self.q:
