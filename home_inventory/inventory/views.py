@@ -66,6 +66,11 @@ def get_index_context():
                 "items_expired": Item.objects.filter(
                     location=location, expiry_date__lt=datetime.date.today()
                 ).count(),
+                "items_expiring_soon": Item.objects.filter(
+                    location=location,
+                    expiry_date__gte=datetime.date.today(),
+                    expiry_date__lt=datetime.date.today() + datetime.timedelta(days=7),
+                ).count(),
             }
         )
 

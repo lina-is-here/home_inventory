@@ -16,6 +16,9 @@
                 {% if row.items_expired > 0 %}
                     <p class="card-text text-danger">{{ row.items_expired }} expired</p>
                 {% endif %}
+                {% if row.items_expiring_soon > 0 %}
+                    <p class="card-text text-warning">{{ row.items_expiring_soon }} expiring soon</p>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

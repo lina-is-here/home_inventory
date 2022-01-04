@@ -10,28 +10,26 @@
             <li class="breadcrumb-item active" aria-current="page">{{ location.name }}</li>
         </ol>
     </nav>
-    <a href="{% url 'add-item' location_id=location_id %}" class="btn btn-secondary">Add</a>
+    <div class="d-grid gap-2">
+            <a class="btn btn-outline-primary" href="{% url 'add-item' location_id=location_id %}" role="button">+ Add Item</a>
+    </div>
     {% if rows %}
+    <table class="table">
+        <tbody>
     {% for row in rows %}
-    <div class="container">
-        <div class="row mb-3">
-            <div class="themed-grid-col">
-                <div class="pb-3 fw-bold">{{ row.category}}</div>
-                {% for item in row.items %}
-                <div class="row border">
-                    <div class="col-4 themed-grid-col"><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></div>
-                    <div class="col-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
-                    <div class="col-4 themed-grid-col {% if item.is_expired %}bg-danger{% endif %}">{{ item.expiry_date }}</div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+            <tr>
+              <th colspan="3">{{ row.category}}</th>
+            </tr>
+      {% for item in row.items %}
+            <tr class="{% if item.is_expired %}table-danger{% elif item.is_expiring_soon %}table-warning{% endif %}">
+                <td><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></td>
+                <td>{{ item.quantity }} {{ item.measurement.name }}</td>
+                <td>{{ item.expiry_date }}</td>
+            </tr>
+      {% endfor %}
     {% endfor %}
-    {% else %}
-    <p>No items here yet :/</p>
+        </tbody>
+    </table>
     {% endif %}
-    </div>
-    </div>
 </main>
 {% endblock %}
