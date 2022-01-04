@@ -118,7 +118,7 @@ def edit_item(request, item_id):
                 context={"item": item},
             )
     else:
-        form = ItemForm(instance=item)
+        form = ItemForm(instance=item, initial={"category": item.name.category})
     return render(
         request,
         "edit_item.html",
