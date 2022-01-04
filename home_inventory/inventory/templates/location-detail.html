@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-4 themed-grid-col"><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></div>
                     <div class="col-4 themed-grid-col">{{ item.quantity }} {{ item.measurement.name }}</div>
-                    <div class="col-4 themed-grid-col">{{ item.expiry_date }}</div>
+                    <div class="col-4 themed-grid-col {% if item.is_expired %}bg-danger{% endif %}">{{ item.expiry_date }}</div>
                 </div>
                 {% endfor %}
             </div>

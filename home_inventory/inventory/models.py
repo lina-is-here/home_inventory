@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.urls import reverse
 
@@ -80,6 +82,12 @@ class Item(models.Model):
                 name="unique product - location - expiry date",
             )
         ]
+
+    @property
+    def is_expired(self):
+        # if the expiry_date is None, item is non-expirable
+        if self.expiry_date:
+            return self.expiry_date < date.today()
 
     def get_absolute_url(self):
         """Returns the URL to access a particular item"""
