@@ -4,7 +4,14 @@
 
 {% block content %}
 <main class="container p-3">
-
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'location-detail' location_id=item.location.id %}">
+                {{ item.location }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
+        </ol>
+    </nav>
     <div class="card">
         <h5 class="card-header">{{ item.name }}</h5>
         <div class="card-body">

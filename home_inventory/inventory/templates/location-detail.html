@@ -3,14 +3,13 @@
 {% block title %}<title>{{ location.name|title }}</title>{% endblock %}
 
 {% block content %}
-<main class="container">
-    <div class="container">
-        <div class="p-4 p-md-5 mb-4 text-black rounded bg-white">
-            <div class="col-md-12 px-0">
-                <h1 class="display-5">{{ location.name|title }}</h1>
-            </div>
-        </div>
-    </div>
+<main class="container p-3">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ location.name }}</li>
+        </ol>
+    </nav>
     <a href="{% url 'add-item' location_id=location_id %}" class="btn btn-secondary">Add</a>
     {% if rows %}
     {% for row in rows %}

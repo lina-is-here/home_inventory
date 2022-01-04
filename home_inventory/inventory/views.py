@@ -125,7 +125,12 @@ def add_item(request, location_id):
     return render(
         request,
         "edit_item.html",
-        context={"form": form, "location_id": location_id, "action": "add"},
+        context={
+            "form": form,
+            "location_id": location_id,
+            "location": default_location,
+            "action": "add",
+        },
     )
 
 
@@ -145,7 +150,7 @@ def edit_item(request, item_id):
     return render(
         request,
         "edit_item.html",
-        context={"form": form, "item_id": item_id, "action": "edit"},
+        context={"form": form, "item_id": item_id, "item": item, "action": "edit"},
     )
 
 

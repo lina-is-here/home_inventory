@@ -3,7 +3,13 @@
 {% block title %}<title>Add Location</title>{% endblock %}
 
 {% block content %}
-<main class="container">
+<main class="container p-3">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Location</li>
+        </ol>
+    </nav>
     <form id="add-form" action="" method="post">
         {% csrf_token %}
         <table>
