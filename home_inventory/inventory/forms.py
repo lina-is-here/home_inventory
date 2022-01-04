@@ -1,7 +1,13 @@
 from dal import autocomplete
 from django.forms import ModelForm, DateInput, ModelChoiceField
 from django.utils.translation import gettext, gettext_lazy as _
-from .models import Item, Category, Product
+from .models import Item, Category, Product, Location
+
+
+class LocationForm(ModelForm):
+    class Meta:
+        model = Location
+        fields = "__all__"
 
 
 class ItemForm(ModelForm):

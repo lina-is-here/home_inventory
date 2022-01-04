@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import Item, Location, Category, Product
-from .forms import ItemForm
+from .forms import ItemForm, LocationForm
 
 
 class ProductAutoComplete(autocomplete.Select2QuerySetView):
@@ -54,8 +54,7 @@ def get_location_context(location_id):
     return {"location_id": location_id, "location": location, "rows": rows}
 
 
-def index(request):
-    """Index view."""
+def get_index_context():
     rows = []
     locations = Location.objects.all()
 
@@ -70,7 +69,12 @@ def index(request):
             }
         )
 
-    context = {"rows": rows}
+    return {"rows": rows}
+
+
+def index(request):
+    """Index view."""
+    context = get_index_context()
     return render(request, "index.html", context=context)
 
 
@@ -78,6 +82,25 @@ def location_detail(request, location_id):
     """Detail view of the location"""
     context = get_location_context(location_id)
     return render(request, "location-detail.html", context=context)
+
+
+def add_location(request):
+    if request.method == "POST":
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(
+                request,
+                "index.html",
+                context=get_index_context(),
+            )
+    else:
+        form = LocationForm()
+    return render(
+        request,
+        "add_location.html",
+        context={"form": form},
+    )
 
 
 def item_detail(request, item_id):
