@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}<title>Add Location</title>{% endblock %}
 
 {% block content %}
@@ -12,9 +14,7 @@
     </nav>
     <form id="add-form" action="" method="post">
         {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
+        {{ form|crispy }}
         <input type="submit" value="Submit">
     </form>
 </main>

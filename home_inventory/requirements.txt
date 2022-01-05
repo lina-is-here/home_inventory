@@ -1,4 +1,6 @@
 django==4.0
+django-crispy-forms==1.13.0
+crispy-bootstrap5==0.6
 django-related-admin==1.0.1
 django-autocomplete-light==3.9.0rc2
 django-filter==21.1

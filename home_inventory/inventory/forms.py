@@ -22,9 +22,7 @@ class ItemForm(ModelForm):
         model = Item
         fields = "__all__"
         widgets = {
-            "name": autocomplete.ModelSelect2(
-                url="product-autocomplete"
-            ),
+            "name": autocomplete.ModelSelect2(url="product-autocomplete"),
             "expiry_date": DateInput(
                 format="%Y-%m-%d",
                 attrs={
