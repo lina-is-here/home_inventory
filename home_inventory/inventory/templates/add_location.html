@@ -12,10 +12,6 @@
             <li class="breadcrumb-item active" aria-current="page">Add Location</li>
         </ol>
     </nav>
-    <form id="add-form" action="" method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Submit">
-    </form>
+    {% crispy form %}
 </main>
 {% endblock %}
