@@ -108,12 +108,6 @@ def add_location(request):
     )
 
 
-def item_detail(request, item_id):
-    """Detail view of item"""
-    item = Item.objects.get(id=item_id)
-    return render(request, "item-detail.html", context={"item": item})
-
-
 def add_item(request, location_id):
     default_location = Location.objects.get(id=location_id)
     if request.method == "POST":
@@ -147,8 +141,8 @@ def edit_item(request, item_id):
             form.save()
             return render(
                 request,
-                "item-detail.html",
-                context={"item": item},
+                "location-detail.html",
+                context=get_location_context(item.location.id),
             )
     else:
         form = ItemForm(instance=item, initial={"category": item.name.category})

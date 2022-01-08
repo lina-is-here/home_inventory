@@ -22,7 +22,7 @@
             </tr>
       {% for item in row.items %}
             <tr class="{% if item.is_expired %}table-danger{% elif item.is_expiring_soon %}table-warning{% endif %}">
-                <td><a href="{% url 'item-detail' item_id=item.id %}">{{ item.name }}</a></td>
+                <td><a href="{% url 'edit-item' item_id=item.id %}">{{ item.name }}</a></td>
                 <td>{{ item.quantity }} {{ item.measurement.name }}</td>
                 <td>{{ item.expiry_date }}</td>
             </tr>

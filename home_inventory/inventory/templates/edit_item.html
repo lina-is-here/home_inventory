@@ -13,8 +13,6 @@
             {% if action == "edit" %}
                 <li class="breadcrumb-item"><a href="{% url 'location-detail' location_id=item.location.id %}">
                     {{ item.location }}</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'item-detail' item_id=item.id %}">
-                    {{ item.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Edit {{ item.name }}</li>
             {% else %}
                 <li class="breadcrumb-item"><a href="{% url 'location-detail' location_id=location_id %}">
@@ -23,11 +21,13 @@
             {% endif %}
         </ol>
     </nav>
-
     <form id="add-form" action="" method="post">
         {% csrf_token %}
         {{ form|crispy }}
         <input class="btn btn-primary" type="submit" value="Submit">
+        {% if action == "edit" %}
+            <input class="btn btn-danger" type="submit" value="Delete" formaction="{% url 'delete-item' item_id=item.id %}">
+        {% endif %}
     </form>
 </main>
 {% endblock %}
