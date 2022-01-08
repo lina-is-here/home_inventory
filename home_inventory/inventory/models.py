@@ -2,7 +2,9 @@ import datetime
 from datetime import date
 
 from django.db import models
+
 from django.urls import reverse
+from slugify import slugify
 
 
 class Category(models.Model):
@@ -11,9 +13,16 @@ class Category(models.Model):
     name = models.CharField(
         max_length=200, unique=True, help_text="The product category"
     )
+    slugify_name = models.SlugField(unique=True)
 
     class Meta:
         ordering = ["name"]
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slugify_name = slugify(self.name)
+
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -25,10 +34,17 @@ class Product(models.Model):
     name = models.CharField(
         max_length=200, unique=True, help_text="Name of the product"
     )
+    slugify_name = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ["name"]
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slugify_name = slugify(self.name)
+
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name

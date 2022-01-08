@@ -4,12 +4,39 @@ import json
 from dal import autocomplete
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.translation import gettext as _
+from slugify import slugify
 
 from .models import Item, Location, Category, Product
 from .forms import ItemForm, LocationForm
 
 
-class ProductAutoComplete(autocomplete.Select2QuerySetView):
+class CustomComplete(autocomplete.Select2QuerySetView):
+    def get_create_option(self, context, q):
+        """Form the correct create_option to append to results."""
+        create_option = []
+        display_create_option = False
+        if self.create_field and q:
+            page_obj = context.get('page_obj', None)
+            if page_obj is None or page_obj.number == 1:
+                display_create_option = True
+
+            # Don't offer to create a new option if slugified name already exists
+            existing_options = (slugify(self.get_result_label(result))
+                                for result in context['object_list'])
+            if slugify(q) in existing_options:
+                display_create_option = False
+
+        if display_create_option and self.has_add_permission(self.request):
+            create_option = [{
+                'id': q,
+                'text': _('Create "%(new_value)s"') % {'new_value': q},
+                'create_id': True,
+            }]
+        return create_option
+
+
+class ProductAutoComplete(CustomComplete):
     def has_add_permission(self, request):
         return True
 
@@ -17,12 +44,13 @@ class ProductAutoComplete(autocomplete.Select2QuerySetView):
         qs = Product.objects.all()
 
         if self.q:
-            qs = qs.filter(name__icontains=self.q)
+            slug_q = slugify(self.q)
+            qs = qs.filter(slugify_name__icontains=slug_q)
 
         return qs
 
 
-class CategoryAutoComplete(autocomplete.Select2QuerySetView):
+class CategoryAutoComplete(CustomComplete):
     def has_add_permission(self, request):
         return True
 
@@ -30,7 +58,8 @@ class CategoryAutoComplete(autocomplete.Select2QuerySetView):
         qs = Category.objects.all()
 
         if self.q:
-            qs = qs.filter(name__icontains=self.q)
+            slug_q = slugify(self.q)
+            qs = qs.filter(slugify_name__icontains=slug_q)
 
         return qs
 
