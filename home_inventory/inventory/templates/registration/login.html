@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Home Inventory</title>{% endblock %}
+
+{% block content %}
+<main class="form-signin">
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" id="form.id_username" placeholder="username" name="{{ form.username.html_name}}">
+      <label for="form.id_username">Username</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="form.id_password" placeholder="Password" name="{{ form.password.html_name}}">
+      <label for="form.id_password">Password</label>
+    </div>
+
+    <input class="w-100 btn btn-lg btn-primary" type="submit" value="Sign in" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+</main>
+{% endblock %}
