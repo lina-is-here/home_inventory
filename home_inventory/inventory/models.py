@@ -36,6 +36,7 @@ class Product(models.Model):
     )
     slugify_name = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True)
+    barcode = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         ordering = ["name"]

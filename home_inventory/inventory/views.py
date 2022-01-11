@@ -17,22 +17,26 @@ class CustomComplete(autocomplete.Select2QuerySetView):
         create_option = []
         display_create_option = False
         if self.create_field and q:
-            page_obj = context.get('page_obj', None)
+            page_obj = context.get("page_obj", None)
             if page_obj is None or page_obj.number == 1:
                 display_create_option = True
 
             # Don't offer to create a new option if slugified name already exists
-            existing_options = (slugify(self.get_result_label(result))
-                                for result in context['object_list'])
+            existing_options = (
+                slugify(self.get_result_label(result))
+                for result in context["object_list"]
+            )
             if slugify(q) in existing_options:
                 display_create_option = False
 
         if display_create_option and self.has_add_permission(self.request):
-            create_option = [{
-                'id': q,
-                'text': _('Create "%(new_value)s"') % {'new_value': q},
-                'create_id': True,
-            }]
+            create_option = [
+                {
+                    "id": q,
+                    "text": _('Create "%(new_value)s"') % {"new_value": q},
+                    "create_id": True,
+                }
+            ]
         return create_option
 
 
@@ -70,6 +74,12 @@ def get_product_category(request, product_name):
     return HttpResponse(
         json.dumps({"id": product.category.id, "name": product.category.name})
     )
+
+
+def get_product_by_barcode(request, barcode):
+    product = Product.objects.get(barcode=barcode)
+
+    return HttpResponse(json.dumps({"id": product.id, "name": product.name}))
 
 
 def get_location_context(location_id):
@@ -174,7 +184,10 @@ def edit_item(request, item_id):
                 context=get_location_context(item.location.id),
             )
     else:
-        form = ItemForm(instance=item, initial={"category": item.name.category})
+        form = ItemForm(
+            instance=item,
+            initial={"category": item.name.category, "barcode": item.name.barcode},
+        )
     return render(
         request,
         "edit_item.html",
