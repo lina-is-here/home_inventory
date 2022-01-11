@@ -70,16 +70,18 @@ class CategoryAutoComplete(CustomComplete):
 
 def get_product_category(request, product_name):
     product = Product.objects.get(name__icontains=product_name)
-
     return HttpResponse(
         json.dumps({"id": product.category.id, "name": product.category.name})
     )
 
 
 def get_product_by_barcode(request, barcode):
-    product = Product.objects.get(barcode=barcode)
-
-    return HttpResponse(json.dumps({"id": product.id, "name": product.name}))
+    try:
+        product = Product.objects.get(barcode=barcode)
+        response = json.dumps({"id": product.id, "name": product.name})
+    except Product.DoesNotExist:
+        response = ""
+    return HttpResponse(response)
 
 
 def get_location_context(location_id):
