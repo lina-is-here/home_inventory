@@ -21,11 +21,11 @@
             {% endif %}
         </ol>
     </nav>
-    <section id="container" class="container">
+    <button id="scan-barcode" class="scan">Scan Barcode</button>
+    <section id="barcode-scanner-container" class="container">
         <div class="controls">
             <fieldset class="input-group">
-                <button class="scan">Scan</button>
-                <button class="stop">Stop</button>
+                <button class="stop">Stop scanning</button>
             </fieldset>
             <fieldset class="reader-config-group">
                 <label>
@@ -73,8 +73,7 @@
             <ul class="collector"></ul>
         </div>
         <div id="interactive" class="viewport">
-            <video class="videoCamera" autoplay="true" preload="auto" src="" muted="true"
-                   playsinline="true"></video>
+            <video class="videoCamera" autoplay preload="auto" src="" muted playsinline></video>
             <canvas class="drawingBuffer"></canvas>
         </div>
     </section>
@@ -375,7 +374,9 @@
             lastResult: null
         };
 
-        $(".controls").on("click", "button.scan", function ($) {
+        $(".container").on("click", "button.scan", function ($) {
+            jQuery("#scan-barcode").hide();
+            jQuery("#barcode-scanner-container").show();
             App.init();
         });
 
@@ -422,6 +423,7 @@
                 }
             });
             Quagga.stop();
+            jQuery("#barcode-scanner-container").hide();
         });
 
     });
