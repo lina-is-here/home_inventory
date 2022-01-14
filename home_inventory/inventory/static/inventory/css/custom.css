@@ -1,3 +1,7 @@
+.row {
+    --bs-gutter-x: 0;
+}
+
 .select2 .select2-container {
     height: 36px !important;
     min-width: 0 !important;
@@ -30,7 +34,7 @@
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 22px;
+    line-height: 24px !important;
 }
 
 .form-signin {

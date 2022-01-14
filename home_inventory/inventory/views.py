@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from slugify import slugify
 
 from .models import Item, Location, Category, Product
-from .forms import ItemForm, LocationForm
+from .forms import ItemForm, LocationForm, EditItemForm, AddItemForm
 
 
 class CustomComplete(autocomplete.Select2QuerySetView):
@@ -152,7 +152,7 @@ def add_location(request):
 def add_item(request, location_id):
     default_location = Location.objects.get(id=location_id)
     if request.method == "POST":
-        form = ItemForm(request.POST)
+        form = AddItemForm(request.POST)
         if form.is_valid():
             form.save()
             return render(
@@ -161,7 +161,9 @@ def add_item(request, location_id):
                 context=get_location_context(location_id),
             )
     else:
-        form = ItemForm(initial={"location": default_location})
+        form = AddItemForm(
+            initial={"location": default_location},
+        )
     return render(
         request,
         "edit_item.html",
@@ -177,7 +179,7 @@ def add_item(request, location_id):
 def edit_item(request, item_id):
     item = Item.objects.get(id=item_id)
     if request.method == "POST":
-        form = ItemForm(request.POST, instance=item)
+        form = EditItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
             return render(
@@ -186,7 +188,7 @@ def edit_item(request, item_id):
                 context=get_location_context(item.location.id),
             )
     else:
-        form = ItemForm(
+        form = EditItemForm(
             instance=item,
             initial={"category": item.name.category, "barcode": item.name.barcode},
         )

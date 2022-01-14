@@ -1,8 +1,16 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import (
+    Submit,
+    Row,
+    Layout,
+    Fieldset,
+    ButtonHolder,
+    HTML,
+    Column,
+)
 from dal import autocomplete
 from django.forms import ModelForm, DateInput, ModelChoiceField, CharField
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from .models import Item, Category, Product, Location
 
 
@@ -54,7 +62,23 @@ class ItemForm(ModelForm):
         self.helper.form_id = "add-form"
         self.helper.form_class = "form-horizontal"
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Submit"))
+        self.helper.layout = Layout(
+            Fieldset(
+                "",
+                "name",
+                "barcode",
+                "category",
+                Row(
+                    Column("quantity", css_class="form-group col-6 pe-1"),
+                    Column("measurement", css_class="form-group col-6 ps-1"),
+                ),
+                "expiry_date",
+                "location",
+            ),
+            ButtonHolder(
+                Submit("submit", "Submit"),
+            )
+        )
 
     def save(self, commit=True):
         # assign category and barcode to product or change the existing one
@@ -75,3 +99,40 @@ class ItemForm(ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class AddItemForm(ItemForm):
+    """Subclassed form when the item is added"""
+
+    pass
+
+
+class EditItemForm(ItemForm):
+    """Subclassed form when the item is edited"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = "add-form"
+        self.helper.form_class = "form-horizontal"
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Fieldset(
+                "",
+                "name",
+                "barcode",
+                "category",
+                Row(
+                    Column("quantity", css_class="form-group col-6 pe-1"),
+                    Column("measurement", css_class="form-group col-6 ps-1"),
+                ),
+                "expiry_date",
+                "location",
+            ),
+            ButtonHolder(
+                Submit("submit", "Submit"),
+                HTML(
+                    """<input class="btn btn-danger" type="submit" value="Delete" formaction="{% url 'delete-item' item_id=item.id %}">"""
+                ),
+            ),
+        )

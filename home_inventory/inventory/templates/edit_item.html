@@ -77,14 +77,7 @@
             <canvas class="drawingBuffer"></canvas>
         </div>
     </section>
-    <form id="add-form" action="" method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input class="btn btn-primary" type="submit" value="Submit">
-        {% if action == "edit" %}
-        <input class="btn btn-danger" type="submit" value="Delete" formaction="{% url 'delete-item' item_id=item.id %}">
-        {% endif %}
-    </form>
+    {% crispy form %}
 </main>
 {% endblock %}
 
