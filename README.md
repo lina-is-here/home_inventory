@@ -20,6 +20,25 @@ The variables are:
 
 See `home_inventory/.env_example` for the example.
 
+
+Certificates
+------------
+Docker-compose expects certificates in order to run the app using HTTPS.
+This is required for the barcode reading feature to work on mobile devices.
+
+From the root of the project:
+```shell
+# create the directory for certificates
+$ mkdir certs
+$ cd certs
+
+# create certificates
+$ openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -x509 -days 365 -out domain.crt
+
+```
+
 Running
 -------
 `$ docker-compose up`
