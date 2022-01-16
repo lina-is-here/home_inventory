@@ -33,8 +33,9 @@ services:
     restart: always
     volumes:
       - ./home_inventory/home_inventory/static:/usr/share/nginx/static
+      - ./certs:/etc/nginx/ssl
     ports:
-      - 8080:80
+      - 8443:443
     networks:
       - nginx_network
     depends_on:
