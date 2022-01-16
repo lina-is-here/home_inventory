@@ -112,11 +112,12 @@
             ({
                 type: "GET",
                 url: `/product/${product_name}`,
-                success: function (category_response) {
-                    var category = JSON.parse(category_response)
+                success: function (product_response) {
+                    var product = JSON.parse(product_response)
                     $("#id_category").select2("trigger", "select", {
-                        data: {id: category.id, text: category.name}
+                        data: {id: product.category_id, text: product.category_name}
                     });
+                    $("#id_barcode").val(product.barcode);
                 }
             });
         });

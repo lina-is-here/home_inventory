@@ -68,10 +68,16 @@ class CategoryAutoComplete(CustomComplete):
         return qs
 
 
-def get_product_category(request, product_name):
+def get_product(request, product_name):
     product = Product.objects.get(name__icontains=product_name)
     return HttpResponse(
-        json.dumps({"id": product.category.id, "name": product.category.name})
+        json.dumps(
+            {
+                "category_id": product.category.id,
+                "category_name": product.category.name,
+                "barcode": product.barcode,
+            }
+        )
     )
 
 

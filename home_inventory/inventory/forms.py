@@ -77,7 +77,7 @@ class ItemForm(ModelForm):
             ),
             ButtonHolder(
                 Submit("submit", "Submit"),
-            )
+            ),
         )
 
     def save(self, commit=True):

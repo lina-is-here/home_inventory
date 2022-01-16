@@ -15,8 +15,8 @@ urlpatterns = [
     ),
     path(
         "product/<str:product_name>/",
-        views.get_product_category,
-        name="get-product-category",
+        views.get_product,
+        name="get-product",
     ),
     path(
         "product-barcode/<str:barcode>/",
