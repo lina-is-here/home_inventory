@@ -11,10 +11,11 @@
         </ol>
     </nav>
     <div class="d-grid gap-2">
-            <a class="btn btn-outline-primary" href="{% url 'add-item' location_id=location_id %}" role="button">+ Add Item</a>
+        <a class="btn btn-outline-primary" href="{% url 'add-item' location_id=location_id %}" role="button">+ Add
+            Item</a>
     </div>
     {% if rows %}
-    <table class="table">
+    <table class="table table-bordered">
         <tbody>
     {% for row in rows %}
             <tr>
