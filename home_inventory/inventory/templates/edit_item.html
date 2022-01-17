@@ -21,60 +21,26 @@
             {% endif %}
         </ol>
     </nav>
-    <button id="scan-barcode" class="scan">Scan Barcode</button>
+    <button type="button" id="scan-barcode" class="btn btn-secondary scan">Scan Barcode</button>
     <section id="barcode-scanner-container" class="container">
         <div class="controls">
             <fieldset class="input-group">
-                <button class="stop">Stop scanning</button>
+                <button type="button" class="btn btn-secondary stop">Stop scanning</button>
             </fieldset>
             <fieldset class="reader-config-group">
-                <label>
-                    <span>Barcode-Type</span>
-                </label>
-                <label>
-                    <span>Resolution (width)</span>
-                    <select name="input-stream_constraints">
-                        <option selected="selected" value="640x480">640px</option>
+                <label class="w-100 py-3">
+                    <select name="input-stream_constraints" id="deviceSelection" class="form-select input-small" aria-label="Default select example">
                     </select>
                 </label>
-                <label>
-                    <span>Patch-Size</span>
-                    <select name="locator_patch-size">
-                        <option selected="selected" value="medium">medium</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Half-Sample</span>
-                    <input type="checkbox" checked="checked" name="locator_half-sample"/>
-                </label>
-                <label>
-                    <span>Workers</span>
-                    <select name="numOfWorkers">
-                        <option selected="selected" value="4">4</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Camera</span>
-                    <select name="input-stream_constraints" id="deviceSelection">
-                    </select>
-                </label>
-                <label style="display: none">
-                    <span>Zoom</span>
-                    <select name="settings_zoom"></select>
-                </label>
-                <label style="display: none">
-                    <span>Torch</span>
-                    <input type="checkbox" name="settings_torch"/>
+                <label class="form-check-label" style="display: none" for="torch-checkbox">
+                    <input type="checkbox" class="form-check-input" name="settings_torch" value="" id="torch-checkbox"/>
+                    Torch
                 </label>
             </fieldset>
         </div>
-        <div id="result_strip">
-            <ul class="thumbnails"></ul>
-            <ul class="collector"></ul>
-        </div>
         <div id="interactive" class="viewport">
-            <video class="videoCamera" autoplay preload="auto" src="" muted playsinline></video>
-            <canvas class="drawingBuffer"></canvas>
+            <video class="videoCamera barcode-area" autoplay preload="auto" src="" muted playsinline></video>
+            <canvas class="drawingBuffer barcode-area" width="100%"></canvas>
         </div>
     </section>
     {% crispy form %}
@@ -158,7 +124,6 @@
                 if (typeof track.getCapabilities === 'function') {
                     capabilities = track.getCapabilities();
                 }
-                this.applySettingsVisibility('zoom', capabilities.zoom);
                 this.applySettingsVisibility('torch', capabilities.torch);
             },
             updateOptionsForMediaRange: function (node, range) {
@@ -193,7 +158,6 @@
                         this.updateOptionsForMediaRange(node, capability);
                         node.parentNode.style.display = 'block';
                     }
-                    return;
                 }
             },
             initCameraSelection: function () {
@@ -224,7 +188,8 @@
                 $(".controls").on("click", "button.stop", function (e) {
                     e.preventDefault();
                     Quagga.stop();
-                    self._printCollectedResults();
+                    jQuery("#barcode-scanner-container").hide();
+                    jQuery("#scan-barcode").show();
                 });
 
                 $(".controls .reader-config-group").on("change", "input, select", function (e) {
@@ -236,18 +201,6 @@
 
                     console.log("Value of " + state + " changed to " + value);
                     self.setState(state, value);
-                });
-            },
-            _printCollectedResults: function () {
-                var results = resultCollector.getResults(),
-                    $ul = $("#result_strip ul.collector");
-
-                results.forEach(function (result) {
-                    var $li = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
-
-                    $li.find("img").attr("src", result.frame);
-                    $li.find("h4.code").html(result.codeResult.code + " (" + result.codeResult.format + ")");
-                    $ul.prepend($li);
                 });
             },
             _accessByPath: function (obj, path, val) {
@@ -279,8 +232,6 @@
                 var track = Quagga.CameraAccess.getActiveTrack();
                 if (track && typeof track.getCapabilities === 'function') {
                     switch (setting) {
-                        case 'zoom':
-                            return track.applyConstraints({advanced: [{zoom: parseFloat(value)}]});
                         case 'torch':
                             return track.applyConstraints({advanced: [{torch: !!value}]});
                     }
@@ -418,6 +369,7 @@
             });
             Quagga.stop();
             jQuery("#barcode-scanner-container").hide();
+            jQuery("#scan-barcode").show();
         });
 
     });
