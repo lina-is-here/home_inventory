@@ -19,8 +19,7 @@ class Category(models.Model):
         ordering = ["name"]
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slugify_name = slugify(self.name)
+        self.slugify_name = slugify(self.name)
 
         super(Category, self).save(*args, **kwargs)
 
@@ -42,8 +41,7 @@ class Product(models.Model):
         ordering = ["name"]
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slugify_name = slugify(self.name)
+        self.slugify_name = slugify(self.name)
 
         super(Product, self).save(*args, **kwargs)
 

@@ -60,6 +60,7 @@ class ExpiryDateListFilter(admin.SimpleListFilter):
 @admin.register(Category)
 class CategoryAdmin(RelatedFieldAdmin):
     search_fields = ("name",)
+    readonly_fields = ("slugify_name",)
 
 
 @admin.register(Location)
@@ -92,5 +93,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "category")
     list_filter = ("category",)
 
+    readonly_fields = ("slugify_name",)
     search_fields = ("name",)
     autocomplete_fields = ("category",)
