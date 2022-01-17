@@ -76,7 +76,7 @@ class ItemForm(ModelForm):
                 "location",
             ),
             ButtonHolder(
-                Submit("submit", "Submit"),
+                Submit("submit", "Save"),
             ),
         )
 
@@ -112,27 +112,10 @@ class EditItemForm(ItemForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_id = "add-form"
-        self.helper.form_class = "form-horizontal"
-        self.helper.form_method = "post"
-        self.helper.layout = Layout(
-            Fieldset(
-                "",
-                "name",
-                "barcode",
-                "category",
-                Row(
-                    Column("quantity", css_class="form-group col-6 pe-1"),
-                    Column("measurement", css_class="form-group col-6 ps-1"),
-                ),
-                "expiry_date",
-                "location",
-            ),
-            ButtonHolder(
-                Submit("submit", "Submit"),
-                HTML(
-                    """<input class="btn btn-danger" type="submit" value="Delete" formaction="{% url 'delete-item' item_id=item.id %}">"""
-                ),
+        # add Remove button
+        self.helper.layout[1].append(
+            HTML(
+                """<input class="btn btn-danger" type="submit" value="Remove" 
+                    formaction="{% url 'delete-item' item_id=item.id %}">"""
             ),
         )
