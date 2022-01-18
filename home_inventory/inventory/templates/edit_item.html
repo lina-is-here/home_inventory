@@ -29,7 +29,8 @@
             </fieldset>
             <fieldset class="reader-config-group">
                 <label class="w-100 py-3">
-                    <select name="input-stream_constraints" id="deviceSelection" class="form-select input-small" aria-label="Default select example">
+                    <select name="input-stream_constraints" id="deviceSelection" class="form-select input-small"
+                            aria-label="Default select example">
                     </select>
                 </label>
                 <label class="form-check-label" style="display: none" for="torch-checkbox">
@@ -92,6 +93,7 @@
 </script>
 <script>
     $(function () {
+        var detectedCodes = [];
         var App = {
             init: function () {
                 var self = this;
@@ -311,7 +313,7 @@
                     right: "20%",
                     left: "20%",
                     bottom: "20%"
-              }
+                }
             },
             lastResult: null
         };
@@ -347,28 +349,39 @@
         });
 
         Quagga.onDetected(function (result) {
-            var code = result.codeResult.code;
-            $('#id_barcode').val(code)
-            $.ajax
-            ({
-                type: "GET",
-                url: `/product-barcode/${code}`,
-                success: function (product_response) {
-                    if (product_response) {
-                        var product = JSON.parse(product_response)
-                        $("#id_name").select2("trigger", "select", {
-                            data: {id: product.id, text: product.name}
-                        });
-                    } else {
-                        console.log(`No product with barcode ${code}`)
-                    }
+                var code = result.codeResult.code;
+                detectedCodes.push(code)
+                // if the last 3 scans are the same, it's more likely the correct barcode
+                var codesLength = detectedCodes.length
+                if (codesLength > 2 && (detectedCodes[codesLength - 1] === detectedCodes[codesLength - 2])
+                    &&
+                    (detectedCodes[codesLength - 1] === detectedCodes[codesLength - 3])
+                ) {
+                    console.log(`Detected ${code} 3 times, proceeding...`)
+                    $('#id_barcode').val(code)
+                    $.ajax
+                    ({
+                        type: "GET",
+                        url: `/product-barcode/${code}`,
+                        success: function (product_response) {
+                            if (product_response) {
+                                var product = JSON.parse(product_response)
+                                $("#id_name").select2("trigger", "select", {
+                                    data: {id: product.id, text: product.name}
+                                });
+                            } else {
+                                console.log(`No product with barcode ${code}`)
+                            }
+                        }
+                    });
+                    Quagga.stop();
+                    jQuery("#barcode-scanner-container").hide();
+                    jQuery("#scan-barcode").show();
                 }
-            });
-            Quagga.stop();
-            jQuery("#barcode-scanner-container").hide();
-            jQuery("#scan-barcode").show();
-        });
+            }
+        );
 
-    });
+    })
+    ;
 </script>
 {% endblock %}
