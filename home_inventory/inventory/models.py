@@ -13,7 +13,7 @@ class Category(models.Model):
     name = models.CharField(
         max_length=200, unique=True, help_text="The product category"
     )
-    slugify_name = models.SlugField(unique=True)
+    slugify_name = models.SlugField(max_length=200, unique=True)
 
     class Meta:
         ordering = ["name"]
@@ -33,7 +33,7 @@ class Product(models.Model):
     name = models.CharField(
         max_length=200, unique=True, help_text="Name of the product"
     )
-    slugify_name = models.SlugField(unique=True)
+    slugify_name = models.SlugField(max_length=200, unique=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True)
     barcode = models.CharField(max_length=50, null=True, blank=True)
 
