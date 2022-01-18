@@ -71,6 +71,18 @@ class LocationAdmin(RelatedFieldAdmin):
 @admin.register(Measurement)
 class MeasurementAdmin(RelatedFieldAdmin):
     search_fields = ("name",)
+    list_display = (
+        "name",
+        "is_default",
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Make 'is_default' readonly if some measurement is already marked as default
+        """
+        if not obj.is_default and Measurement.objects.all().filter(is_default=True):
+            return self.readonly_fields + ("is_default",)
+        return self.readonly_fields
 
 
 @admin.register(Item)

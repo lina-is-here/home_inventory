@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from slugify import slugify
 
-from .models import Item, Location, Category, Product
+from .models import Item, Location, Category, Product, Measurement
 from .forms import ItemForm, LocationForm, EditItemForm, AddItemForm
 
 
@@ -157,6 +157,10 @@ def add_location(request):
 
 def add_item(request, location_id):
     default_location = Location.objects.get(id=location_id)
+    try:
+        default_measurement = Measurement.objects.get(is_default=True)
+    except Measurement.DoesNotExist:
+        default_measurement = ""
     if request.method == "POST":
         form = AddItemForm(request.POST)
         if form.is_valid():
@@ -168,7 +172,7 @@ def add_item(request, location_id):
             )
     else:
         form = AddItemForm(
-            initial={"location": default_location},
+            initial={"location": default_location, "measurement": default_measurement},
         )
     return render(
         request,

@@ -2,6 +2,7 @@ import datetime
 from datetime import date
 
 from django.db import models
+from django.db.models import Q
 
 from django.urls import reverse
 from slugify import slugify
@@ -71,9 +72,21 @@ class Measurement(models.Model):
     """Model representing measurement of the item, e.g. Pieces"""
 
     name = models.CharField(max_length=100, unique=True, help_text="Measurement unit")
+    is_default = models.BooleanField(
+        default=False,
+        help_text="If True, it's default measurement for new item."
+        "Only one measurement can be default.",
+    )
 
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["is_default"],
+                name="Only one measurement can be default",
+                condition=Q(is_default=True),
+            )
+        ]
 
     def __str__(self):
         return self.name
