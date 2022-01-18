@@ -41,6 +41,7 @@
         <div id="interactive" class="viewport">
             <video class="videoCamera barcode-area" autoplay preload="auto" src="" muted playsinline></video>
             <canvas class="drawingBuffer barcode-area" width="100%"></canvas>
+            <div id="scan-viewport"></div>
         </div>
     </section>
     {% crispy form %}
@@ -91,16 +92,6 @@
 </script>
 <script>
     $(function () {
-        var resultCollector = Quagga.ResultCollector.create({
-            capture: true,
-            capacity: 20,
-            filter: function (codeResult) {
-                // only store results which match this constraint
-                // e.g.: codeResult
-                return true;
-            }
-        });
-
         var App = {
             init: function () {
                 var self = this;
@@ -314,7 +305,13 @@
                         config: {}
                     }]
                 },
-                locate: true
+                locate: false,
+                area: {
+                    top: "20%",
+                    right: "20%",
+                    left: "20%",
+                    bottom: "20%"
+              }
             },
             lastResult: null
         };

@@ -46,12 +46,16 @@
 
 .viewport {
     position: relative;
+    overflow: hidden;
+    display:block;
+    width: 100%;
+    height: 20vh;
 }
 
 .drawingBuffer {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 #barcode-scanner-container {
@@ -62,4 +66,17 @@
 
 .barcode-area {
     width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#scan-viewport {
+    border:5px solid red;
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 20%;
+    right: 20%;
 }
