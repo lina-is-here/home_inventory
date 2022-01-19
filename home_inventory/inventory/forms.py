@@ -9,7 +9,7 @@ from crispy_forms.layout import (
     Column,
 )
 from dal import autocomplete
-from django.forms import ModelForm, DateInput, ModelChoiceField, CharField
+from django.forms import ModelForm, DateInput, ModelChoiceField, CharField, NumberInput
 from django.utils.translation import gettext_lazy as _
 from .models import Item, Category, Product, Location
 
@@ -54,6 +54,8 @@ class ItemForm(ModelForm):
                     "type": "date",
                 },
             ),
+            # show numeric keyboard for both Android Chrome and iOS Safari
+            "quantity": NumberInput(attrs={"pattern": "\d*"}),
         }
 
     def __init__(self, *args, **kwargs):
