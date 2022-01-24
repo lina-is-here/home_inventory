@@ -5,6 +5,7 @@ home_inventory/db.sqlite3
 home_inventory/home_inventory/__pycache__/
 home_inventory/inventory/migrations/__pycache__/
 home_inventory/inventory/__pycache__/
+home_inventory/inventory/tests/__pycache__/
 home_inventory/home_inventory/static/
 home_inventory/static/
 home_inventory/.env

@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from slugify import slugify
 
 from .models import Item, Location, Category, Product, Measurement
-from .forms import ItemForm, LocationForm, EditItemForm, AddItemForm
+from .forms import LocationForm, EditItemForm, AddItemForm
 
 
 class CustomComplete(autocomplete.Select2QuerySetView):

@@ -122,11 +122,8 @@ class Item(models.Model):
     def is_expiring_soon(self):
         # if the expiry_date is None, item is non-expirable
         if self.expiry_date:
-            return self.expiry_date < (date.today() + datetime.timedelta(days=7))
-
-    def get_absolute_url(self):
-        """Returns the URL to access a particular item"""
-        return reverse("item-detail", args=[str(self.id)])
+            today = date.today()
+            return today <= self.expiry_date < (today + datetime.timedelta(days=7))
 
     def __str__(self):
         return self.name.name
