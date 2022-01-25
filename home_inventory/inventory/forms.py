@@ -117,7 +117,7 @@ class EditItemForm(ItemForm):
         # add Remove button
         self.helper.layout[1].append(
             HTML(
-                """<input class="btn btn-danger" type="submit" value="Remove" 
+                """<input class="btn btn-danger" type="submit" value="Remove"
                     formaction="{% url 'delete-item' item_id=item.id %}">"""
             ),
         )
