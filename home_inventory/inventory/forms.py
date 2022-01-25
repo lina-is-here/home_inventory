@@ -37,7 +37,9 @@ class ItemForm(ModelForm):
         ),
     )
 
-    barcode = CharField(label=_("Barcode"), required=False)
+    barcode = CharField(
+        label=_("Barcode"), required=False, widget=NumberInput(attrs={"pattern": "\d*"})
+    )
 
     class Meta:
         model = Item
