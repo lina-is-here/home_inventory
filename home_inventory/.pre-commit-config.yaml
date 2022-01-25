@@ -16,5 +16,10 @@ repos:
         name: pytest-check
         entry: bash -c "cd home_inventory && pytest"
         language: system
+        verbose: true
         pass_filenames: false
         always_run: true
+      - id: footer-commit
+        name: add commit date to footer page
+        entry: home_inventory/footer-commit.sh
+        language: script
