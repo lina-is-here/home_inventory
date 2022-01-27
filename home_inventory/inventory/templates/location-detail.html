@@ -31,6 +31,7 @@
             <td><a href="{% url 'edit-item' item_id=item.id %}">{{ item.name }}</a></td>
             <td>{{ item.quantity }} {{ item.measurement.name }}</td>
             <td>{{ item.expiry_date }}</td>
+            <td class="item-slug-name">{{ item.name.slugify_name }}</td>
         </tr>
         {% endfor %}
         {% endfor %}
@@ -46,12 +47,19 @@
     (function ($) {
         $('#search-item').on("input", function () {
             var search_text = $("#search-item").val()
-            $("#items-table tr.item-row").each(function () {
-                var item_name = $(this).find("a").text();
-                if (item_name.toLowerCase().includes(search_text.toLowerCase())) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
+            $.ajax
+            ({
+                type: "GET",
+                url: `/slugify/${search_text}`,
+                success: function (slug_search) {
+                    $("#items-table tr.item-row").each(function () {
+                        var item_name = $(this).find(".item-slug-name").text();
+                        if (item_name.includes(slug_search)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
                 }
             });
         });

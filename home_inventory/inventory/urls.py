@@ -23,6 +23,16 @@ urlpatterns = [
         views.get_product_by_barcode,
         name="get-product-by-barcode",
     ),
+    path(
+        "slugify/<str:text>/",
+        views.get_slugified,
+        name="get-slugified",
+    ),
+    path(
+        "slugify/",
+        views.get_slugified,
+        name="get-slugified",
+    ),
     path("locations/<int:location_id>/", views.location_detail, name="location-detail"),
     path("locations/add/", views.add_location, name="add-location"),
     path("locations/<int:location_id>/add/", views.add_item, name="add-item"),

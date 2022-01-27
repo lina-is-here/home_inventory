@@ -90,6 +90,14 @@ def get_product_by_barcode(request, barcode):
     return HttpResponse(response)
 
 
+def get_slugified(request, text=""):
+    if text:
+        resp = slugify(text)
+    else:
+        resp = ""
+    return HttpResponse(resp)
+
+
 def get_location_context(location_id):
     location = Location.objects.get(id=location_id)
     categories = Category.objects.all()

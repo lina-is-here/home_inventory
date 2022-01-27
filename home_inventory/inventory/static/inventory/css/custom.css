@@ -80,3 +80,7 @@
     left: 20%;
     right: 20%;
 }
+
+.item-slug-name {
+    display: none;
+}
