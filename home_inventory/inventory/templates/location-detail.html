@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}<title>{{ location.name|title }}</title>{% endblock %}
 
@@ -10,27 +11,50 @@
             <li class="breadcrumb-item active" aria-current="page">{{ location.name }}</li>
         </ol>
     </nav>
-    <div class="d-grid gap-2">
+    <div class="d-grid gap-2 mb-3">
         <a class="btn btn-outline-primary" href="{% url 'add-item' location_id=location_id %}" role="button">+ Add
             Item</a>
     </div>
+    <div class="input-group mb-3">
+        <input id="search-item" type="text" class="form-control" placeholder="Search item" aria-label="Search item"
+               aria-describedby="basic-addon2">
+    </div>
     {% if rows %}
-    <table class="table table-bordered">
+    <table id="items-table" class="table table-bordered">
         <tbody>
-    {% for row in rows %}
-            <tr>
-              <th colspan="3">{{ row.category}}</th>
-            </tr>
-      {% for item in row.items %}
-            <tr class="{% if item.is_expired %}table-danger{% elif item.is_expiring_soon %}table-warning{% endif %}">
-                <td><a href="{% url 'edit-item' item_id=item.id %}">{{ item.name }}</a></td>
-                <td>{{ item.quantity }} {{ item.measurement.name }}</td>
-                <td>{{ item.expiry_date }}</td>
-            </tr>
-      {% endfor %}
-    {% endfor %}
+        {% for row in rows %}
+        <tr class="item-category">
+            <th colspan="3">{{ row.category}}</th>
+        </tr>
+        {% for item in row.items %}
+        <tr class="item-row{% if item.is_expired %} table-danger{% elif item.is_expiring_soon %} table-warning{% endif %}">
+            <td><a href="{% url 'edit-item' item_id=item.id %}">{{ item.name }}</a></td>
+            <td>{{ item.quantity }} {{ item.measurement.name }}</td>
+            <td>{{ item.expiry_date }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
     {% endif %}
 </main>
+{% endblock %}
+
+{% block footer_extra %}
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+<script>
+    (function ($) {
+        $('#search-item').on("input", function () {
+            var search_text = $("#search-item").val()
+            $("#items-table tr.item-row").each(function () {
+                var item_name = $(this).find("a").text();
+                if (item_name.toLowerCase().includes(search_text.toLowerCase())) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    })($)
+</script>
 {% endblock %}
