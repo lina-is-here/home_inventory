@@ -138,6 +138,11 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
+def lookup_item(request):
+    """Search page view."""
+    return render(request, "lookup_item.html", context={})
+
+
 def location_detail(request, location_id):
     """Detail view of the location"""
     context = get_location_context(location_id)
