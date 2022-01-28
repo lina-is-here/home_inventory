@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}<title>Search Item</title>{% endblock %}
+
+{% block content %}
+<main class="container p-3">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Search</li>
+        </ol>
+    </nav>
+    <button type="button" id="scan-barcode" class="btn btn-secondary scan">Scan Barcode</button>
+    <section id="barcode-scanner-container" class="container">
+        <div class="controls">
+            <fieldset class="input-group">
+                <button type="button" class="btn btn-secondary stop">Stop scanning</button>
+            </fieldset>
+            <fieldset class="reader-config-group">
+                <label class="w-100 py-3">
+                    <select name="input-stream_constraints" id="deviceSelection" class="form-select input-small"
+                            aria-label="Default select example">
+                    </select>
+                </label>
+                <label class="form-check-label" style="display: none" for="torch-checkbox">
+                    <input type="checkbox" class="form-check-input" name="settings_torch" value="" id="torch-checkbox"/>
+                    Torch
+                </label>
+            </fieldset>
+        </div>
+        <div id="interactive" class="viewport">
+            <video class="videoCamera barcode-area" autoplay preload="auto" src="" muted playsinline></video>
+            <canvas class="drawingBuffer barcode-area" width="100%"></canvas>
+            <div id="scan-viewport"></div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block footer_extra %}
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'inventory/js/quagga.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'inventory/js/barcode-scanner.js' %}"></script>
+
+{{ form.media }}
+
+{% endblock %}

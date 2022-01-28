@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("search/", views.lookup_item, name="lookup_item"),
     re_path(
         r"^product-autocomplete/$",
         views.ProductAutoComplete.as_view(create_field="name"),
