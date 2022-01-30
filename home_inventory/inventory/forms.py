@@ -9,7 +9,14 @@ from crispy_forms.layout import (
     Column,
 )
 from dal import autocomplete
-from django.forms import ModelForm, DateInput, ModelChoiceField, CharField, NumberInput
+from django.forms import (
+    ModelForm,
+    DateInput,
+    ModelChoiceField,
+    CharField,
+    NumberInput,
+    Form,
+)
 from django.utils.translation import gettext_lazy as _
 from .models import Item, Category, Product, Location
 
@@ -123,3 +130,39 @@ class EditItemForm(ItemForm):
                     formaction="{% url 'delete-item' item_id=item.id %}">"""
             ),
         )
+
+
+class SearchForm(Form):
+    """Inputs for search"""
+
+    name = CharField(label="Product name", max_length=200, required=False)
+    barcode = CharField(label="Product barcode", max_length=50, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = "search-form"
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Fieldset(
+                "",
+                "name",
+                "barcode",
+            ),
+            ButtonHolder(
+                Submit("submit", "Search"),
+            ),
+        )
+
+    def is_valid(self):
+        """Return True if the form has no errors, or False otherwise."""
+        basic_validation = super().is_valid()
+        name = self.cleaned_data["name"]
+        barcode = self.cleaned_data["barcode"]
+        if name and barcode:  # can't search for both at the same time
+            extra_validation = False
+        elif name or barcode:  # but at least one value should be filled
+            extra_validation = True
+        else:
+            extra_validation = False
+        return basic_validation and extra_validation

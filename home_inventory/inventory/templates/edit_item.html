@@ -91,7 +91,7 @@
             });
         });
         // lookup product by barcode
-        $('#id_barcode').on('input', function () {
+        $('#id_barcode').on('scanned', function () {
             var code = $('#id_barcode').val();
             $.ajax
             ({

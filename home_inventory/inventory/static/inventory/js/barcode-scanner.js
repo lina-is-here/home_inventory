@@ -264,7 +264,7 @@ $(function () {
                 (detectedCodes[codesLength - 1] === detectedCodes[codesLength - 3])
             ) {
                 console.log(`Detected ${code} 3 times, proceeding...`)
-                $('#id_barcode').val(code).trigger('input')
+                $('#id_barcode').val(code).trigger('scanned')
                 Quagga.stop();
                 jQuery("#barcode-scanner-container").hide();
                 jQuery("#scan-barcode").show();
