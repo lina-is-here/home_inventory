@@ -37,6 +37,7 @@
             <div id="scan-viewport"></div>
         </div>
     </section>
+    {% crispy form %}
 </main>
 {% endblock %}
 
@@ -46,5 +47,12 @@
 <script type="text/javascript" src="{% static 'inventory/js/barcode-scanner.js' %}"></script>
 
 {{ form.media }}
-
+<script>
+    (function ($) {
+        // Click search after barcode is scanned
+        $('#id_barcode').on('scanned', function () {
+            $('#submit-id-submit').click()
+        });
+    })($)
+</script>
 {% endblock %}

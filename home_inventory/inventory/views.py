@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from slugify import slugify
 
 from .models import Item, Location, Category, Product, Measurement
-from .forms import LocationForm, EditItemForm, AddItemForm
+from .forms import LocationForm, EditItemForm, AddItemForm, SearchForm
 
 
 class CustomComplete(autocomplete.Select2QuerySetView):
@@ -132,6 +132,23 @@ def get_index_context():
     return {"rows": rows}
 
 
+def get_search_context(product_name, product_barcode):
+    locations = Location.objects.all()
+    rows = []
+    if product_name:
+        search_term = product_name
+        items = Item.objects.filter(name__slugify_name__icontains=slugify(product_name))
+    else:
+        search_term = product_barcode
+        items = Item.objects.filter(name__barcode=product_barcode)
+
+    for location in locations:
+        items_location = items.filter(location=location)
+        if items_location:
+            rows.append({"location": location, "items": items_location})
+    return {"search_term": search_term, "rows": rows}
+
+
 def index(request):
     """Index view."""
     context = get_index_context()
@@ -140,7 +157,23 @@ def index(request):
 
 def lookup_item(request):
     """Search page view."""
-    return render(request, "lookup_item.html", context={})
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            return render(
+                request,
+                "search_results.html",
+                context=get_search_context(
+                    form.cleaned_data["name"], form.cleaned_data["barcode"]
+                ),
+            )
+    else:
+        form = SearchForm()
+    return render(
+        request,
+        "lookup_item.html",
+        context={"form": form},
+    )
 
 
 def location_detail(request, location_id):
