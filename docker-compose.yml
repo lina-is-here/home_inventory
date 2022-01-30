@@ -16,6 +16,7 @@ services:
       - db_network
     depends_on:
       - hi-postgres
+    entrypoint: ["./compose-entrypoint.sh"]
 
   hi-postgres:
     image: postgres
