@@ -6,7 +6,7 @@ from .fixtures import (
     created_measurement,
     created_category,
 )
-from ..forms import LocationForm, ItemForm, EditItemForm
+from ..forms import LocationForm, ItemForm, EditItemForm, SearchForm
 from ..models import Product, Category, Item
 
 pytestmark = pytest.mark.django_db
@@ -80,3 +80,18 @@ class TestEditItemForm:
         assert form.is_valid()
         item = form.save()
         assert item.quantity == 5
+
+
+class TestSearchForm:
+    @pytest.mark.parametrize(
+        "data,expected",
+        [
+            ({"name": "product name", "barcode": "123456"}, False),
+            ({"name": "product name"}, True),
+            ({"barcode": "123456"}, True),
+            ({"no_name": "no_barcode"}, False),
+        ],
+    )
+    def test_is_valid(self, data, expected):
+        form = SearchForm(data=data)
+        assert form.is_valid() is expected

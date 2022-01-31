@@ -2,6 +2,7 @@ import json
 from unittest.mock import MagicMock
 
 import pytest
+from slugify import slugify
 
 from .fixtures import (
     created_product,
@@ -25,6 +26,9 @@ from ..views import (
     add_item,
     edit_item,
     delete_item,
+    get_slugified,
+    get_search_context,
+    lookup_item,
 )
 
 
@@ -121,6 +125,24 @@ def test_get_product_by_barcode_not_exists(db, created_product):
     assert response.content == b""
 
 
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Very ranDOM текст", slugify("Very ranDOM текст")),
+        ("", ""),
+        (None, ""),
+    ],
+)
+def test_get_slugified(text, expected):
+    request = MagicMock()
+    if text is None:
+        response = get_slugified(request)
+    else:
+        response = get_slugified(request, text)
+    assert response.status_code == 200
+    assert response.content.decode("utf-8") == expected
+
+
 def test_get_location_context(
     db, created_product, created_location, created_category, created_measurement
 ):
@@ -160,11 +182,63 @@ def test_get_index_context(db, created_product, created_location, created_measur
     }
 
 
+@pytest.mark.parametrize(
+    "product_name,barcode",
+    [
+        (None, "123456"),
+        ("some name", None),
+    ],
+)
+def test_get_search_context(
+    db, created_product, created_location, created_measurement, product_name, barcode
+):
+    if barcode:
+        search_term = barcode
+        created_product.barcode = barcode
+    else:
+        search_term = product_name
+        created_product.name = product_name
+
+    created_product.save()
+    item = Item.objects.create(
+        name=created_product,
+        location=created_location,
+        measurement=created_measurement,
+    )
+    response = get_search_context(product_name, barcode)
+    qs = response["rows"][0]["items"]
+    response["rows"][0]["items"] = [item for item in qs]
+    assert response == {
+        "search_term": search_term,
+        "rows": [
+            {
+                "items": [item],
+                "location": created_location,
+            }
+        ],
+    }
+
+
 def test_index(db):
     request = MagicMock()
     response = index(request)
     assert response.status_code == 200
     assert "<title>Home Inventory</title>" in str(response.content)
+
+
+def test_lookup_item_post(db):
+    data = {"name": "something", "barcode": None}
+    request = MagicMock(method="POST", POST=data)
+    response = lookup_item(request)
+    assert response.status_code == 200
+    assert "<title>Search Results</title>" in str(response.content)
+
+
+def test_lookup_item_form(db):
+    request = MagicMock()
+    response = lookup_item(request)
+    assert response.status_code == 200
+    assert "<title>Search Item</title>" in str(response.content)
 
 
 def test_location_detail(db, created_location):
