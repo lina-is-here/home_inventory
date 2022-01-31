@@ -9,3 +9,6 @@ omit =
   *urls.py,
   *wsgi/*,
   manage.py
+
+[report]
+fail_under = 100
