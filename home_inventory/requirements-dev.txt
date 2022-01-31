@@ -1,4 +1,5 @@
 pytest-django
 pytest-cov
+mock-django
 black
 pre-commit
