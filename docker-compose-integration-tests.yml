@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  hi-django:
+    build:
+      context: ./home_inventory
+    env_file:
+      ./home_inventory/.env
+    volumes:
+      - ./home_inventory/home_inventory/static:/static
+    restart: "on-failure"
+    ports:
+      - 8000:8000
+    depends_on:
+      - hi-postgres
+    entrypoint: ["./compose-entrypoint.sh"]
+
+  hi-postgres:
+    image: postgres
+    restart: "on-failure"
+    env_file:
+      ./home_inventory/.env
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+  hi-nginx:
+    build:
+      context: ./nginx
+    restart: always
+    volumes:
+      - ./home_inventory/home_inventory/static:/usr/share/nginx/static
+      - ./certs:/etc/nginx/ssl
+    ports:
+      - 8443:443
+    depends_on:
+      - hi-django
+
+  selenium-container:
+    image: selenium/standalone-chrome:4.1.2-20220131
+    ports:
+      - 4444:4444
+      - 7900:7900
+    shm_size: "2g"
+    depends_on:
+      - hi-django
+
+  integration-tests:
+    build:
+      context: ./integration_tests
+    depends_on:
+      - selenium-container
+
+volumes:
+  home-inventory:
