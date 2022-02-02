@@ -1,4 +1,7 @@
 pytest
 selenium
 requests
+cached-property
+navmazing
 wait-for
+widgetastic.core
