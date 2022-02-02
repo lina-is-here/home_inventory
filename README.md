@@ -46,3 +46,13 @@ Running
 In case of changes, run
 `$ docker-compose up --build`
 to rebuild the images.
+
+
+Integration Tests
+-----------------
+Integration tests are located in `/integration_tests`.
+
+To run them:
+``` shell
+$ docker-compose -f docker-compose-integration-tests.yml up --build --abort-on-container-exit
+```
