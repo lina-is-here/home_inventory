@@ -6,6 +6,7 @@ from cached_property import cached_property
 from navmazing import NavigateStep, NavigationTriesExceeded
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 from wait_for import wait_for
 from widgetastic.browser import Browser
 
@@ -82,15 +83,20 @@ def home_inventory_ui():
     # check that selenium container is up and running
     wait_for(selenium_driver_is_available, delay=1, timeout=120, handle_exception=True)
 
+    # set desired capabilities to the driver
+    options = Options()
+    capabilities = {
+        "platformName": "LINUX",
+        "unexpectedAlertBehaviour": "ignore",
+        "acceptInsecureCerts": True,
+        "ensureCleanSession": True,
+    }
+    for name, value in capabilities.items():
+        options.set_capability(name, value)
+
     selenium_driver = webdriver.Remote(
         command_executor=f"{driver}/wd/hub",
-        desired_capabilities={
-            "platform": "LINUX",
-            "browserName": "chrome",
-            "unexpectedAlertBehaviour": "ignore",
-            "acceptInsecureCerts": True,
-            "ensureCleanSession": True,
-        },
+        options=options,
     )
 
     wt_browser = HI_UI(selenium_driver)
