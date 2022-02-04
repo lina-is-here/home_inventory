@@ -72,8 +72,8 @@ class HINavigateStep(NavigateStep):
 
 @pytest.fixture(scope="session")
 def home_inventory_ui():
-    driver = "http://selenium-container:4444"
-    test_page = "https://hi-nginx"
+    driver = os.environ.get("SELENIUM_DRIVER", "http://selenium-container:4444")
+    test_page = os.environ.get("TEST_HOST", "https://hi-nginx")
 
     def selenium_driver_is_available():
         r = requests.get(driver)
@@ -98,3 +98,4 @@ def home_inventory_ui():
     yield wt_browser
 
     wt_browser.selenium.close()
+    wt_browser.selenium.quit()

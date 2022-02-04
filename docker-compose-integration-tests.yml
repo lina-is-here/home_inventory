@@ -20,8 +20,6 @@ services:
     restart: "on-failure"
     env_file:
       ./home_inventory/.env
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
 
   hi-nginx:
     build:
