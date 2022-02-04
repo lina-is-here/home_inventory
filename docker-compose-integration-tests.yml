@@ -45,6 +45,8 @@ services:
   integration-tests:
     build:
       context: ./integration_tests
+    env_file:
+      ./home_inventory/.env
     depends_on:
       - selenium-container
 

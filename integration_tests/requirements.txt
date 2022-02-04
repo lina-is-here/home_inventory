@@ -1,6 +1,7 @@
 pytest
 selenium
 requests
+psycopg2
 cached-property
 navmazing
 wait-for
