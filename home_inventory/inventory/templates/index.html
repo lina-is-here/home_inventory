@@ -9,7 +9,7 @@
         {% for row in rows %}
         <div class="card text-dark bg-light mb-3">
             <div class="card-header d-grid">
-                <a href="{{ row.location.get_absolute_url }}" class="btn btn-outline-dark fs-2" role="button">{{ row.location.name }}</a>
+                <a href="{{ row.location.get_absolute_url }}" class="btn btn-outline-dark fs-2 location" role="button">{{ row.location.name }}</a>
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ row.items_count }} items</h5>
