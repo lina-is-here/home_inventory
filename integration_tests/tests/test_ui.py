@@ -1,5 +1,7 @@
 from views import IndexPageView, navigate_to
 
+from base import add_measurement
+
 
 def test_index(home_inventory_ui):
     index_view = navigate_to(home_inventory_ui, "IndexPage")
@@ -18,3 +20,12 @@ def test_add_location(home_inventory_ui):
 
     # assert the location is added
     assert test_location in index_view.get_all_locations()
+
+
+def test_item_measurements(home_inventory_ui, postgres_connection):
+    db_connection, db_cursor = postgres_connection
+    new_measurement = "pieces"
+    add_measurement(db_connection, db_cursor, new_measurement)
+
+    # assert new measurement is visible in AddItem form
+    # TODO: add assertion for measurement
