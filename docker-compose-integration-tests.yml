@@ -5,7 +5,7 @@ services:
     build:
       context: ./home_inventory
     env_file:
-      ./home_inventory/.env
+      ./integration_tests/.env_tests
     volumes:
       - ./home_inventory/home_inventory/static:/static
     restart: "on-failure"
@@ -19,7 +19,7 @@ services:
     image: postgres
     restart: "on-failure"
     env_file:
-      ./home_inventory/.env
+      ./integration_tests/.env_tests
 
   hi-nginx:
     build:
@@ -46,7 +46,7 @@ services:
     build:
       context: ./integration_tests
     env_file:
-      ./home_inventory/.env
+      ./integration_tests/.env_tests
     depends_on:
       - selenium-container
 
