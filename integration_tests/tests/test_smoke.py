@@ -27,5 +27,13 @@ def test_item_measurements(home_inventory_ui, postgres_connection):
     new_measurement = "pieces"
     add_measurement(db_connection, db_cursor, new_measurement)
 
-    # assert new measurement is visible in AddItem form
-    # TODO: add assertion for measurement
+    index_view = navigate_to(home_inventory_ui, "IndexPage")
+    # TODO: add location if there are none
+    location_view = index_view.navigate_first_location()
+    item_form = location_view.add_item()
+
+    # assert new measurement is visible and selectable in AddItem form
+    all_measurements = [option.text for option in item_form.measurement.all_options]
+    assert new_measurement in all_measurements
+    item_form.measurement.select_by_visible_text(new_measurement)
+    assert item_form.measurement.first_selected_option == new_measurement
