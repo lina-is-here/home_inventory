@@ -1,3 +1,4 @@
+from selenium.webdriver import Keys
 from widgetastic.utils import ParametrizedLocator
 from widgetastic.xpath import quote
 from widgetastic.widget import ClickableMixin, Widget
@@ -110,3 +111,39 @@ class Button(BaseButton, Widget, ClickableMixin):
         self.args = text
         self.kwargs = kwargs
         self.locator = kwargs.pop("locator", self._generate_locator(*text, **kwargs))
+
+
+class Select2(Widget):
+    """
+    A Select2 select. A value can be typed in and added to the list on the fly.
+    """
+
+    def __init__(self, parent, locator=None, id=None, name=None, logger=None):
+        Widget.__init__(self, parent, logger=logger)
+        if (locator and id) or (id and name) or (locator and name):
+            raise TypeError(
+                "You can only pass one of the params locator, id, name into Select2"
+            )
+        if locator is not None:
+            self.locator = locator
+        elif id is not None:
+            self.locator = f".//span[@id={quote(id)}]"
+        else:  # name
+            self.locator = f".//span[@name={quote(name)}]"
+
+    def fill(self, text):
+        # the select2 element has to be clicked first
+        click_locator = (
+            f"{self.locator}/ancestor::span[contains(@class,'select2-container')]"
+        )
+        select2_container = self.browser.element(click_locator)
+        self.browser.click(select2_container)
+        # find the input area, only one selct2 can be opened at a time, so it's safe to
+        # search by class
+        select2_input = self.browser.element(".//input[@class='select2-search__field']")
+        self.browser.click(select2_input)
+        self.browser.clear(select2_input)
+        self.browser.send_keys(text, select2_input)
+        # TODO: add some logic for Create option
+        self.browser.send_keys(Keys.ENTER, select2_input)
+        return True

@@ -1,9 +1,10 @@
 from navmazing import Navigate, NavigateToSibling
+from selenium.common.exceptions import NoSuchElementException
 from wait_for import wait_for
-from widgetastic.widget import View, Text, TextInput, Select
+from widgetastic.widget import View, Text, TextInput, Select, Table
 
 from base.browser import HI_UI, HINavigateStep
-from base.widgetastic_widgets import Button
+from base.widgetastic_widgets import Button, Select2
 
 
 class BasePageView(View):
@@ -44,6 +45,7 @@ class IndexPageView(BasePageView):
 
     def navigate_first_location(self):
         """Navigate to the first location in the list"""
+        self.location.wait_displayed()
         self.location.click()
         return self.browser.create_view(LocationView)
 
@@ -60,11 +62,13 @@ class AddLocationView(BasePageView):
     def add_location(self, location_name):
         self.location_input.fill(location_name)
         self.submit_button.click()
+        return self.browser.create_view(IndexPageView)
 
 
 class LocationView(BasePageView):
     breadcrumb = Text(locator=".//ol[@class='breadcrumb']")
     add_button = Button(locator=".//a[@id='add-item-button']")
+    items = Table(locator=".//table[@id='items-table']")
 
     @property
     def is_displayed(self):
@@ -74,17 +78,32 @@ class LocationView(BasePageView):
         self.add_button.click()
         return self.browser.create_view(ItemForm)
 
+    def all_items(self):
+        items = []
+        for row in self.items:
+            try:
+                items.append(row[0].text)
+            except NoSuchElementException:
+                continue
+        return items
+
 
 class ItemForm(BasePageView):
     breadcrumb = Text(locator=".//ol[@class='breadcrumb']")
     save_button = Button(locator=".//input[@id='submit-id-submit']")
+    name = Select2(locator=".//span[@id='select2-id_name-container']")
+    barcode = TextInput(id="id_barcode")
+    category = Select2(locator=".//span[@id='select2-id_category-container']")
+    quantity = TextInput(id="id_quantity")  # this is number input in fact
     measurement = Select(id="id_measurement")
+    expiry_date = TextInput(id="id_expiry_date")  # this is date input in fact
+    location = Select(id="id_location")
 
     @property
     def is_displayed(self):
         return self.breadcrumb.is_displayed and self.save_button.is_displayed
 
-    def save_item(self):
+    def save(self):
         self.save_button.click()
         return self.browser.create_view(LocationView)
 
@@ -102,7 +121,8 @@ class IndexPage(HINavigateStep):
         return self.view.is_displayed
 
     def step(self):
-        self.obj.create_view(BasePageView)
+        self.obj.go_home()
+        self.obj.create_view(IndexPageView)
 
 
 @navigator.register(HI_UI)
