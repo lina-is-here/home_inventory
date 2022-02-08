@@ -10,10 +10,16 @@ from selenium.webdriver.chrome.options import Options
 from wait_for import wait_for
 from widgetastic.browser import Browser
 
+DRIVER = os.environ.get("SELENIUM_DRIVER", "http://selenium-container:4444")
+TEST_PAGE = os.environ.get("TEST_HOST", "https://hi-nginx")
+
 
 class HI_UI(Browser):
     def create_view(self, view_class):
         return view_class(self)
+
+    def go_home(self):
+        return self.selenium.get(TEST_PAGE)
 
 
 class HINavigateStep(NavigateStep):
@@ -73,11 +79,8 @@ class HINavigateStep(NavigateStep):
 
 @pytest.fixture(scope="session")
 def home_inventory_ui():
-    driver = os.environ.get("SELENIUM_DRIVER", "http://selenium-container:4444")
-    test_page = os.environ.get("TEST_HOST", "https://hi-nginx")
-
     def selenium_driver_is_available():
-        r = requests.get(driver)
+        r = requests.get(DRIVER)
         return r.status_code == 200
 
     # check that selenium container is up and running
@@ -95,12 +98,12 @@ def home_inventory_ui():
         options.set_capability(name, value)
 
     selenium_driver = webdriver.Remote(
-        command_executor=f"{driver}/wd/hub",
+        command_executor=f"{DRIVER}/wd/hub",
         options=options,
     )
 
     wt_browser = HI_UI(selenium_driver)
-    wt_browser.selenium.get(test_page)
+    wt_browser.selenium.get(TEST_PAGE)
     yield wt_browser
 
     wt_browser.selenium.close()
