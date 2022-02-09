@@ -4,13 +4,13 @@ from wait_for import wait_for
 from widgetastic.widget import View, Text, TextInput, Select, Table
 
 from base.browser import HI_UI, HINavigateStep
-from base.widgetastic_widgets import Button, Select2
+from base.widgetastic_widgets import Button, Select2, Navbar
 
 
 class BasePageView(View):
     title = Text(locator=".//title")
-    # TODO: navbar and footer are not Text widgets
-    navbar = Text(locator=".//nav")
+    # TODO: footer is not Text widget
+    navbar = Navbar(locator=".//nav")
     footer = Text(locator=".//footer")
 
     @property
@@ -76,7 +76,7 @@ class LocationView(BasePageView):
 
     def add_item(self):
         self.add_button.click()
-        return self.browser.create_view(ItemForm)
+        return self.browser.create_view(ItemFormView)
 
     def all_items(self):
         items = []
@@ -88,7 +88,7 @@ class LocationView(BasePageView):
         return items
 
 
-class ItemForm(BasePageView):
+class ItemFormView(BasePageView):
     breadcrumb = Text(locator=".//ol[@class='breadcrumb']")
     save_button = Button(locator=".//input[@id='submit-id-submit']")
     name = Select2(locator=".//span[@id='select2-id_name-container']")
@@ -106,6 +106,43 @@ class ItemForm(BasePageView):
     def save(self):
         self.save_button.click()
         return self.browser.create_view(LocationView)
+
+
+class EditItemFormView(ItemFormView):
+    """Almost the same but has 'Remove' button"""
+
+    remove_button = Button(locator=".//input[@value='remove']")
+
+    @property
+    def is_displayed(self):
+        return (
+            self.breadcrumb.is_displayed
+            and self.save_button.is_displayed
+            and self.remove_button.is_displayed
+        )
+
+    def remove(self):
+        self.remove_button.click()
+        return self.browser.create_view(LocationView)
+
+
+class SearchView(BasePageView):
+    breadcrumb = Text(locator=".//ol[@class='breadcrumb']")
+    product_name = TextInput(id="id_name")
+    product_barcode = TextInput(id="id_barcode")
+    search_button = Button(locator=".//input[@id='submit-id-submit']")
+
+    @property
+    def is_displayed(self):
+        return (
+            self.breadcrumb.is_displayed
+            and self.product_name.is_displayed
+            and self.product_barcode.is_displayed
+            and self.search_button.is_displayed
+        )
+
+    def search(self):
+        self.search_button.click()
 
 
 # ------------------Navigation---------------------------#
@@ -141,3 +178,16 @@ class AddLocationPage(HINavigateStep):
             message=f"Wait for {self.view}",
             delay=1,
         )
+
+
+@navigator.register(HI_UI)
+class SearchViewPage(HINavigateStep):
+    VIEW = SearchView
+
+    def am_i_here(self):
+        return self.view.is_displayed
+
+    def step(self):
+        # search is accessible from any page
+        view = self.obj.create_view(BasePageView)
+        # TODO: click on the Search link

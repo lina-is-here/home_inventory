@@ -147,3 +147,28 @@ class Select2(Widget):
         # TODO: add some logic for Create option
         self.browser.send_keys(Keys.ENTER, select2_input)
         return True
+
+
+class Navbar(Widget):
+    """
+    Navbar that is in tag <nav> and contains links
+    """
+
+    def __init__(self, parent, locator=None, id=None, name=None, logger=None):
+        Widget.__init__(self, parent, logger=logger)
+        if (locator and id) or (id and name) or (locator and name):
+            raise TypeError(
+                "You can only pass one of the params locator, id, name into Navbar"
+            )
+        if locator is not None:
+            self.locator = locator
+        elif id is not None:
+            self.locator = f".//nav[@id={quote(id)}]"
+        else:  # name
+            self.locator = f".//nav[@name={quote(name)}]"
+
+    def read(self, *args, **kwargs):
+        links_elements = self.browser.elements(
+            f"{self.locator}/descendant::a[contains(@class, 'nav-link')]"
+        )
+        return [link.text for link in links_elements]
