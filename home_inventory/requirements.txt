@@ -1,4 +1,4 @@
-django==4.0.1
+django==4.0.2
 django-crispy-forms==1.13.0
 crispy-bootstrap5==0.6
 django-related-admin==1.0.1
