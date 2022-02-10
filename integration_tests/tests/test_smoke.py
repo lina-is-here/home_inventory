@@ -1,3 +1,6 @@
+"""
+Test the very basic functionality of the app.
+"""
 import datetime
 
 from views import IndexPageView, navigate_to
