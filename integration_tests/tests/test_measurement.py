@@ -29,11 +29,20 @@ def test_no_default_measurement(home_inventory_ui, postgres_connection):
     assert item_form.measurement.first_selected_option == "---------"
 
 
-def test_default_measurement_select():
+def test_default_measurement_select(home_inventory_ui, add_measurement):
     """
     The default measurement is selected but can be changed to another
     """
-    pass
+    default_measurement = "paketiki"
+    other_measurement = "sumki"
+    add_measurement(default_measurement, True)
+    add_measurement(other_measurement)
+    index_view = navigate_to(home_inventory_ui, "IndexPage")
+    location_view = index_view.navigate_first_location()
+    item_form = location_view.add_item()
+    assert item_form.measurement.first_selected_option == default_measurement
+    item_form.measurement.select_by_visible_text(other_measurement)
+    assert item_form.measurement.first_selected_option == other_measurement
 
 
 def test_default_measurement_only_one():
