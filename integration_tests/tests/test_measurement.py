@@ -15,11 +15,18 @@ def test_default_measurement(home_inventory_ui, add_measurement):
     assert item_form.measurement.first_selected_option == default_measurement
 
 
-def test_no_default_measurement():
+def test_no_default_measurement(home_inventory_ui, postgres_connection):
     """
     If there's no default measurement, '---------' is displayed
     """
-    pass
+    db_connection, db_cursor = postgres_connection
+    db_cursor.execute("SELECT id FROM inventory_measurement WHERE is_default=true;")
+    assert db_cursor.fetchone() is None  # no default measurement in the database
+    db_connection.commit()
+    index_view = navigate_to(home_inventory_ui, "IndexPage")
+    location_view = index_view.navigate_first_location()
+    item_form = location_view.add_item()
+    assert item_form.measurement.first_selected_option == "---------"
 
 
 def test_default_measurement_select():
