@@ -1,3 +1,5 @@
+import psycopg2
+import pytest
 from views import navigate_to
 
 
@@ -45,8 +47,12 @@ def test_default_measurement_select(home_inventory_ui, add_measurement):
     assert item_form.measurement.first_selected_option == other_measurement
 
 
-def test_default_measurement_only_one():
+def test_default_measurement_only_one(add_measurement):
     """
     Only one measurement can be default, adding another violates DB constraint
     """
-    pass
+    default_measurement = "shtuki"
+    other_measurement = "shtuchki"
+    add_measurement(default_measurement, True)
+    with pytest.raises(psycopg2.Error):
+        add_measurement(other_measurement, True)
