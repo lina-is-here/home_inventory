@@ -1,8 +1,18 @@
-def test_default_measurement():
+from views import navigate_to
+
+
+def test_default_measurement(home_inventory_ui, add_measurement):
     """
     The default measurement is displayed on AddItem form
     """
-    pass
+    default_measurement = "kusochki"
+    add_measurement(default_measurement, True)
+    # TODO: this is ugly
+    add_location_view = navigate_to(home_inventory_ui, "AddLocationPage")
+    index_view = add_location_view.add_location("some location")
+    location_view = index_view.navigate_first_location()
+    item_form = location_view.add_item()
+    assert item_form.measurement.first_selected_option == default_measurement
 
 
 def test_no_default_measurement():

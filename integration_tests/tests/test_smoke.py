@@ -5,7 +5,7 @@ import datetime
 
 from views import IndexPageView, navigate_to
 
-from base import add_measurement
+# from base import add_measurement
 
 
 def test_index(home_inventory_ui):
@@ -30,13 +30,12 @@ def test_add_location(home_inventory_ui):
     assert test_location in index_view.get_all_locations()
 
 
-def test_item_measurements(home_inventory_ui, postgres_connection):
+def test_item_measurements(home_inventory_ui, add_measurement):
     """
     The measurement is displayed in the dropdown after it is added to the database.
     """
-    db_connection, db_cursor = postgres_connection
-    new_measurement = "pieces"
-    add_measurement(db_connection, db_cursor, new_measurement)
+    new_measurement = "tablets"
+    add_measurement(new_measurement)
 
     index_view = navigate_to(home_inventory_ui, "IndexPage")
     # TODO: add location if there are none

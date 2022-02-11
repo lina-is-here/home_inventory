@@ -1,7 +1,11 @@
+"""
+All the things to talk to the database directly
+"""
 import os
 
 import psycopg2
 import pytest
+from wait_for import wait_for
 
 
 @pytest.fixture(scope="session")
@@ -19,6 +23,23 @@ def postgres_connection():
     # Create a cursor object
     cur = conn.cursor()
 
+    # check that postgres is available and set up
+    def _postgres_is_available():
+        try:
+            cur.execute("SELECT * FROM inventory_measurement;")
+            conn.commit()
+            return True
+        except:  # whatever is error, try to rollback the failed transaction
+            conn.rollback()
+            return False
+
+    wait_for(
+        _postgres_is_available,
+        delay=1,
+        timeout=180,
+        handle_exception=True,
+    )
+
     yield conn, cur
 
     # Close the cursor and connection to so the server can allocate
@@ -27,10 +48,43 @@ def postgres_connection():
     conn.close()
 
 
-def add_measurement(db_connection, db_cursor, measurement_name, is_default=False):
-    # insert measurement in measurement table
+@pytest.fixture(scope="session", autouse=True)
+def add_pieces_measurement(postgres_connection):
+    db_connection, db_cursor = postgres_connection
     db_cursor.execute(
-        """INSERT INTO inventory_measurement (name, is_default) VALUES (%s, %s);""",
-        (measurement_name, is_default),
+        "INSERT INTO inventory_measurement (name, is_default) VALUES ('pieces', false);"
+    )
+    db_connection.commit()
+
+    yield
+
+    # delete all items first as they reference this measurement
+    db_cursor.execute("DELETE FROM inventory_item")
+    db_cursor.execute("DELETE FROM inventory_measurement WHERE name = 'pieces';")
+    db_connection.commit()
+
+
+@pytest.fixture()
+def add_measurement(postgres_connection):
+    db_connection, db_cursor = postgres_connection
+
+    msrmnt = []
+
+    def add_measurement_func(measurement_name, is_default=False):
+        # passing measurement name to the fixture for cleanup
+        msrmnt.append(measurement_name)
+
+        # insert measurement in measurement table
+        db_cursor.execute(
+            "INSERT INTO inventory_measurement (name, is_default) VALUES (%s, %s);",
+            (measurement_name, is_default),
+        )
+        db_connection.commit()
+
+    yield add_measurement_func
+
+    db_cursor.execute(
+        "DELETE FROM inventory_measurement WHERE name = (%s);",
+        (msrmnt[0],),
     )
     db_connection.commit()
