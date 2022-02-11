@@ -75,11 +75,17 @@ def add_measurement(postgres_connection):
         msrmnt.append(measurement_name)
 
         # insert measurement in measurement table
-        db_cursor.execute(
-            "INSERT INTO inventory_measurement (name, is_default) VALUES (%s, %s);",
-            (measurement_name, is_default),
-        )
-        db_connection.commit()
+        try:
+            db_cursor.execute(
+                "INSERT INTO inventory_measurement (name, is_default) VALUES (%s, %s);",
+                (measurement_name, is_default),
+            )
+            db_connection.commit()
+        except:
+            db_connection.rollback()
+            raise psycopg2.Error(
+                "Error while inserting {measurement_name}, default = {is_default}"
+            )
 
     yield add_measurement_func
 
