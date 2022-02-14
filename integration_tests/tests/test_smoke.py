@@ -37,9 +37,7 @@ def test_item_measurements(home_inventory_ui, add_measurement):
     new_measurement = "tablets"
     add_measurement(new_measurement)
 
-    index_view = navigate_to(home_inventory_ui, "IndexPage")
-    # TODO: add location if there are none
-    location_view = index_view.navigate_first_location()
+    location_view = navigate_to(home_inventory_ui, "FirstLocationPage")
     item_form = location_view.add_item()
 
     # assert new measurement is visible and selectable in AddItem form
@@ -60,9 +58,7 @@ def test_add_item(home_inventory_ui):
         "measurement": "pieces",
         "expiry_date": datetime.date.today().strftime("%d.%m.%Y"),
     }
-    index_view = navigate_to(home_inventory_ui, "IndexPage")
-    # TODO: add location if there are none
-    location_view = index_view.navigate_first_location()
+    location_view = navigate_to(home_inventory_ui, "FirstLocationPage")
     item_form = location_view.add_item()
     item_form.fill(item)
     location_view = item_form.save()
