@@ -172,12 +172,18 @@ class AddLocationPage(HINavigateStep):
 
     def step(self):
         self.prerequisite_view.add_location()
-        wait_for(
-            lambda: self.view.is_displayed,
-            timeout=60,
-            message=f"Wait for {self.view}",
-            delay=1,
-        )
+
+
+@navigator.register(HI_UI)
+class FirstLocationPage(HINavigateStep):
+    VIEW = LocationView
+    prerequisite = NavigateToSibling("IndexPage")
+
+    def am_i_here(self):
+        return self.view.is_displayed
+
+    def step(self):
+        self.prerequisite_view.navigate_first_location()
 
 
 @navigator.register(HI_UI)

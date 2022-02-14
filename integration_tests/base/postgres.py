@@ -50,6 +50,9 @@ def postgres_connection():
 
 @pytest.fixture(scope="session", autouse=True)
 def add_pieces_measurement(postgres_connection):
+    """
+    Add measurement to the app
+    """
     db_connection, db_cursor = postgres_connection
     db_cursor.execute(
         "INSERT INTO inventory_measurement (name, is_default) VALUES ('pieces', false);"
@@ -61,6 +64,23 @@ def add_pieces_measurement(postgres_connection):
     # delete all items first as they reference this measurement
     db_cursor.execute("DELETE FROM inventory_item")
     db_cursor.execute("DELETE FROM inventory_measurement WHERE name = 'pieces';")
+    db_connection.commit()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def add_default_location(postgres_connection):
+    """
+    Add some location
+    """
+    db_connection, db_cursor = postgres_connection
+    db_cursor.execute("INSERT INTO inventory_location (name) VALUES ('nice place');")
+    db_connection.commit()
+
+    yield
+
+    # delete all items first as they reference this measurement
+    db_cursor.execute("DELETE FROM inventory_item")
+    db_cursor.execute("DELETE FROM inventory_location WHERE name = 'nice place';")
     db_connection.commit()
 
 
