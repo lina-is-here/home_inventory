@@ -1,7 +1,7 @@
 from navmazing import Navigate, NavigateToSibling
 from selenium.common.exceptions import NoSuchElementException
 from wait_for import wait_for
-from widgetastic.widget import View, Text, TextInput, Select, Table
+from widgetastic.widget import View, Text, TextInput, Select, Table, TableRow
 
 from base.browser import HI_UI, HINavigateStep
 from base.widgetastic_widgets import Button, Select2, Navbar

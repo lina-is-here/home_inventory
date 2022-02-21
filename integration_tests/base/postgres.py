@@ -104,7 +104,7 @@ def add_measurement(postgres_connection):
         except:
             db_connection.rollback()
             raise psycopg2.Error(
-                "Error while inserting {measurement_name}, default = {is_default}"
+                f"Error while inserting {measurement_name}, default = {is_default}"
             )
 
     yield add_measurement_func

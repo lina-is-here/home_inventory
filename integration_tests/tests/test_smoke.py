@@ -56,7 +56,7 @@ def test_add_item(home_inventory_ui):
         "name": item_name,
         "category": "Drinks",
         "measurement": "pieces",
-        "expiry_date": datetime.date.today().strftime("%d.%m.%Y"),
+        "expiry_date": datetime.date.today().strftime("%m.%d.%Y"),
     }
     location_view = navigate_to(home_inventory_ui, "FirstLocationPage")
     item_form = location_view.add_item()
