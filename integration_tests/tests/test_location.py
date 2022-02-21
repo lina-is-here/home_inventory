@@ -1,7 +1,53 @@
-def test_category_is_displayed():
+import datetime
+
+import pytest
+
+from views import navigate_to
+
+
+@pytest.fixture(scope="module")
+def created_items(home_inventory_ui, postgres_connection):
+    items = [
+        {
+            "name": "Canned Corn 1kg",
+            "category": "Canned",
+            "measurement": "pieces",
+            "expiry_date": datetime.date.today().strftime("%m.%d.%Y"),
+        },
+        {
+            "name": "Big Apple Juice 10L",
+            "category": "Drinks",
+            "measurement": "pieces",
+            "expiry_date": datetime.date.today().strftime("%m.%d.%Y"),
+        },
+        {
+            "name": "Big Box of Milk 5L",
+            "category": "Drinks",
+            "measurement": "pieces",
+            "expiry_date": datetime.date.today().strftime("%m.%d.%Y"),
+        },
+    ]
+    for item in items:
+        location_view = navigate_to(home_inventory_ui, "FirstLocationPage")
+        item_form = location_view.add_item()
+        item_form.fill(item)
+        item_form.save()
+
+    yield
+
+    # clear all the created stuff
+    db_connection, db_cursor = postgres_connection
+    db_cursor.execute("DELETE FROM inventory_category")
+    db_cursor.execute("DELETE FROM inventory_product")
+    db_cursor.execute("DELETE FROM inventory_item")
+    db_connection.commit()
+
+
+def test_category_is_displayed(home_inventory_ui, created_items):
     """
     Items are displayed per category
     """
+    location_view = navigate_to(home_inventory_ui, "FirstLocationPage")
     pass
 
 
